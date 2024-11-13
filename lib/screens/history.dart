@@ -24,11 +24,26 @@ class History extends StatelessWidget {
                 },
                 notificationPredicate: defaultScrollNotificationPredicate,
                 child: Obx(() => controller.linesHistoryEmpty()
-                    ? const SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        child: Padding(
-                            padding: EdgeInsets.only(top: 200),
-                            child: Center(child: Text("History empty"))))
+                    ? const CustomScrollView(
+                        slivers: [
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                    child: Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.phonelink_setup_outlined),
+                                    Text("History empty")
+                                  ],
+                                )))
+                              ],
+                            ),
+                          )
+                        ],
+                      )
                     : ListView.builder(
                         itemCount: controller.linesNumber(),
                         itemBuilder: (BuildContext context, int index) {
