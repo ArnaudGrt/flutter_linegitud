@@ -32,7 +32,6 @@ class HistoryController extends GetxController {
   }
 
   Future<void> refreshLinesHistory(){
-    print("reload history");
     initLineHistory();
 
     return Future.delayed(const Duration(seconds: 3));
