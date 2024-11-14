@@ -9,13 +9,19 @@ import 'package:linegitud/screens/history.dart';
 
 class HomeController extends GetxController {
   final selectedIndex = 0.obs;
+  final currentAppbarTitle = "Linegitud".obs;
   final GlobalKey<NavigatorState>? navigatorKey = Get.nestedKey(1);
 
   final List<String> pages = [
     AppRoutes.history,
     AppRoutes.newLine,
-    AppRoutes.list,
-    AppRoutes.settings
+    AppRoutes.list
+  ];
+
+  final List<String> pagesName = [
+    "Linegitud",
+    "Nouveau trait",
+    "Classement général"
   ];
 
   void selectMenu(int index){
@@ -23,6 +29,9 @@ class HomeController extends GetxController {
 
     selectedIndex.value = index;
     selectedIndex.refresh();
+
+    currentAppbarTitle.value = pagesName[index];
+    currentAppbarTitle.refresh();
 
     Get.offNamed(pages[index], id: 1);
   }
