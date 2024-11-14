@@ -6,13 +6,15 @@ class Line {
   String sender;
   String recipient;
   String state;
+  DateTime createdAt;
 
   Line({
     required this.id,
     required this.reason,
     required this.sender,
     required this.recipient,
-    required this.state
+    required this.state,
+    required this.createdAt
   });
 
   factory Line.fromJson(Map<String, dynamic> json) {
@@ -21,7 +23,8 @@ class Line {
       reason: json['reason'],
       sender: json['sender'],
       recipient: json ['recipient'],
-      state: json['state']
+      state: json['state'],
+      createdAt: DateTime.parse(json['created_at'])
     );
   }
 }
@@ -31,11 +34,15 @@ class LineList {
 
   LineList({ required this.lineList });
 
-  factory LineList.fromJson(String json){
+  factory LineList.fromJson(String json, List<String> states){
     final Map<String, dynamic> data = jsonDecode(json);
 
     var list = data['list'] as List;
-    List<Line> lineList = list.map((i) => Line.fromJson(i)).toList();
+    var filteredList = list.where((data) =>
+      states.contains(data['state'])
+    ).toList();
+
+    List<Line> lineList = filteredList.map((i) => Line.fromJson(i)).toList();
 
     return LineList(lineList: lineList);
   }
