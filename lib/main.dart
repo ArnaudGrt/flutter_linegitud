@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/gestures.dart';
 
 import 'package:linegitud/bindings/home.dart';
 import 'package:linegitud/routes/router.dart';
@@ -23,6 +22,7 @@ class App extends StatelessWidget {
       transitionDuration: const Duration(milliseconds: 250),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: const Color(0xfff0f0f0),
         useMaterial3: true,
       ),
       scrollBehavior: const MaterialScrollBehavior()
