@@ -1,16 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'package:linegitud/controllers/history.dart';
+import 'package:linegitud/controllers/home.dart';
 
 class History extends StatelessWidget {
-  const History({super.key});
+  History({super.key});
+
+  final HistoryController controller = Get.find();
+  final HomeController homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    HistoryController controller = Get.find();
+    return Obx(() => showContent());
+  }
 
-    var theme = Theme.of(context);
+  Widget showContent() {
+    var theme = Theme.of(Get.context!);
+
+    if (controller.isLoading.value) {
+      return const Scaffold(
+        body: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
         body: Column(
@@ -24,7 +45,7 @@ class History extends StatelessWidget {
                 },
                 notificationPredicate: defaultScrollNotificationPredicate,
                 child: Obx(() => controller.linesHistoryEmpty()
-                    ? const CustomScrollView(
+                    ? CustomScrollView(
                         slivers: [
                           SliverFillRemaining(
                             hasScrollBody: false,
@@ -33,10 +54,40 @@ class History extends StatelessWidget {
                                 Expanded(
                                     child: Center(
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.phonelink_setup_outlined),
-                                    Text("History empty")
+                                    Icon(
+                                      Icons.auto_awesome_outlined,
+                                      size: 120,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: Text(
+                                          "Aucun trait n'a encore été ajouté :(",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500)),
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: ElevatedButton.icon(
+                                            onPressed: () {
+                                              homeController.selectMenu(1);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    theme.colorScheme.primary),
+                                            icon: const Icon(
+                                              Icons.arrow_forward_rounded,
+                                              color: Colors.white,
+                                            ),
+                                            label: const Text(
+                                              "Nouveau trait",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )))
                                   ],
                                 )))
                               ],
@@ -44,13 +95,67 @@ class History extends StatelessWidget {
                           )
                         ],
                       )
-                    : ListView.builder(
-                        itemCount: controller.linesNumber(),
-                        itemBuilder: (BuildContext context, int index) {
-                          final line = controller.getCurrentIndex(index);
+                    : Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: ListView.separated(
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const SizedBox(height: 4),
+                          itemCount: controller.linesNumber(),
+                          itemBuilder: (BuildContext context, int index) {
+                            final line = controller.getCurrentIndex(index);
 
-                          return ListTile(title: Text(line.reason));
-                        },
+                            return SizedBox(
+                                height: 100,
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        side: BorderSide(
+                                            color: theme.colorScheme.primary,
+                                            width: 0.4)),
+                                    color: Colors.white,
+                                    elevation: 4,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            RichText(
+                                                text: TextSpan(children: [
+                                              const WidgetSpan(
+                                                  alignment:
+                                                      PlaceholderAlignment
+                                                          .middle,
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    color: Colors.green,
+                                                    size: 16,
+                                                  )),
+                                              TextSpan(
+                                                  text: line.sender,
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16)),
+                                              const WidgetSpan(
+                                                  alignment:
+                                                      PlaceholderAlignment
+                                                          .middle,
+                                                  child: Icon(
+                                                    Icons
+                                                        .arrow_right_alt_rounded,
+                                                    size: 28,
+                                                  )),
+                                              TextSpan(
+                                                  text: line.recipient,
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16))
+                                            ])),
+                                            Text(line.reason),
+                                            Text(line.createdAt.toString())
+                                          ]),
+                                    )));
+                          },
+                        ),
                       ))))
       ],
     ));
