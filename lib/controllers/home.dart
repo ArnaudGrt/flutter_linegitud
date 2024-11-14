@@ -56,13 +56,13 @@ class HomeController extends GetxController {
         return GetPageRoute(
           routeName: AppRoutes.history,
           transition: Transition.downToUp,
-          page: () => const History()
+          page: () => History()
         );
       default:
         return GetPageRoute(
           routeName: AppRoutes.history,
           transition: Transition.downToUp,
-          page: () => const History()
+          page: () => History()
         );
     }
   }
