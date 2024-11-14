@@ -42,7 +42,7 @@ class AppRoutes {
     ),
     GetPage(
       name: history,
-      page: () => const History(),
+      page: () => History(),
       bindings: [
         HistoryBindings()
       ]
