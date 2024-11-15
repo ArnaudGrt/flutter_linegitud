@@ -38,9 +38,13 @@ class LineList {
     final Map<String, dynamic> data = jsonDecode(json);
 
     var list = data['list'] as List;
+    // Filtered by states
     var filteredList = list.where((data) =>
       states.contains(data['state'])
     ).toList();
+
+    // Sort by created_at (most recent first)
+    filteredList.sort((a, b) => b['created_at'].compareTo(a['created_at']));
 
     List<Line> lineList = filteredList.map((i) => Line.fromJson(i)).toList();
 
