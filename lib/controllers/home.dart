@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'dart:math';
 
 import 'package:linegitud/routes/router.dart';
-import 'package:linegitud/screens/lines_list.dart';
+import 'package:linegitud/screens/ranking.dart';
 import 'package:linegitud/screens/new_line.dart';
 import 'package:linegitud/screens/history.dart';
 
@@ -15,7 +15,7 @@ class HomeController extends GetxController {
   final List<String> pages = [
     AppRoutes.history,
     AppRoutes.newLine,
-    AppRoutes.list
+    AppRoutes.ranking
   ];
 
   final List<String> pagesName = [
@@ -46,11 +46,11 @@ class HomeController extends GetxController {
           transition: Transition.downToUp,
           page: () => const NewLine()
         );
-      case AppRoutes.list:
+      case AppRoutes.ranking:
         return GetPageRoute(
-          routeName: AppRoutes.list,
+          routeName: AppRoutes.ranking,
           transition: Transition.downToUp,
-          page: () => const LinesList()
+          page: () => const UserRanking()
         );
       case AppRoutes.history:
         return GetPageRoute(
