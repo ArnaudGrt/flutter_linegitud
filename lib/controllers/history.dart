@@ -67,12 +67,6 @@ class HistoryController extends GetxController {
     isLoading.refresh();
   }
 
-  String formatReason(String reason){
-    return reason.length >= reasonLength ?
-      reason.replaceRange(reasonLength, reason.length, "...") :
-      reason;
-  }
-
   bool reasonIsTooLong(String reason){
     return reason.length >= reasonLength;
   }
