@@ -8,6 +8,7 @@ import 'package:linegitud/models/line.dart';
 class HistoryController extends GetxController {
   Rx<LineList> lineList = Rx(LineList(lineList: []));
   final durationValue = 2;
+  final reasonLength = 75;
   final isLoading = false.obs;
 
   @override
@@ -64,5 +65,15 @@ class HistoryController extends GetxController {
 
     isLoading.value = value;
     isLoading.refresh();
+  }
+
+  String formatReason(String reason){
+    return reason.length >= reasonLength ?
+      reason.replaceRange(reasonLength, reason.length, "...") :
+      reason;
+  }
+
+  bool reasonIsTooLong(String reason){
+    return reason.length >= reasonLength;
   }
 }
