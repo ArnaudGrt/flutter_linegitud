@@ -28,7 +28,7 @@ class AppRoutes {
     ),
     GetPage(
       name: ranking,
-      page: () => const UserRanking(),
+      page: () => UserRanking(),
       bindings: [
         UserRankingBindings()
       ]
