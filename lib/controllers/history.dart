@@ -39,7 +39,7 @@ class HistoryController extends GetxController {
     lineList.value = LineList.fromJson(jsonData, ['validated']);
   }
 
-  Future<void> getLinesHistory(withLoader) async {
+  Future<void> getLinesHistory(bool withLoader) async {
     if(withLoader){
       toggleLoader(true);
     }
