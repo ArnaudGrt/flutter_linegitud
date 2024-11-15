@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LinesList extends StatelessWidget {
-  const LinesList({super.key});
+class UserRanking extends StatelessWidget {
+  const UserRanking({super.key});
 
   @override
   Widget build(BuildContext context) {
