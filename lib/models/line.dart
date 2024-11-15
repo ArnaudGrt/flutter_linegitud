@@ -65,4 +65,13 @@ class LineList {
   Line getFromIndex(int index){
     return lineList[index];
   }
+
+  // Return lines count from a user name
+  int linesCount(String name){
+    final userLines = lineList.where((line) =>
+      line.recipient == name
+    );
+
+    return userLines.length;
+  }
 }
