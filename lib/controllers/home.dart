@@ -50,7 +50,7 @@ class HomeController extends GetxController {
         return GetPageRoute(
           routeName: AppRoutes.ranking,
           transition: Transition.downToUp,
-          page: () => const UserRanking()
+          page: () => UserRanking()
         );
       case AppRoutes.history:
         return GetPageRoute(
