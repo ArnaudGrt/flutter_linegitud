@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -58,14 +59,14 @@ class History extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.auto_awesome_outlined,
+                                      FontAwesomeIcons.faceSadTear,
                                       size: 120,
                                       color: theme.colorScheme.primary,
                                     ),
                                     const Padding(
                                       padding: EdgeInsets.only(top: 8),
                                       child: Text(
-                                          "Aucun trait n'a encore été ajouté :(",
+                                          "Aucun trait n'a encore été ajouté...",
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 16,
