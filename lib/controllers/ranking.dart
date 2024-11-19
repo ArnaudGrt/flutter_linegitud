@@ -24,7 +24,7 @@ class UserRankingController extends GetxController {
     final usersData = mockUser();
     final usersList = UserList.fromJson(usersData);
 
-    return usersList.namesOnly();
+    return usersList.getCleanUsers();
   }
 
   LineList fetchLines(){
@@ -38,10 +38,10 @@ class UserRankingController extends GetxController {
     final lines = fetchLines();
     List res = [];
 
-    for (final userName in users){
-      final linesCount = lines.linesCount(userName);
+    for (final user in users){
+      final linesCount = lines.linesCount(user.name);
 
-      res.add({ userName: linesCount });
+      res.add(RankingUser(name: user.name, icon: user.icon, total: linesCount, totalText: linesCount.toString()));
     }
 
     return res;
@@ -53,7 +53,7 @@ class UserRankingController extends GetxController {
     }
 
     Timer(Duration(seconds: durationValue), () {
-      computeUsersLines();
+      ranking.value = computeUsersLines();
       toggleLoader(false);
     });
 
@@ -64,8 +64,8 @@ class UserRankingController extends GetxController {
     getRankingList(true);
   }
 
-  void refreshRankingList(){
-    getRankingList(false);
+  void refreshRankingList() async {
+    await getRankingList(false);
   }
 
   void toggleLoader(bool value){
