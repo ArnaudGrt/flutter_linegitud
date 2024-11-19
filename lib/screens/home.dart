@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:linegitud/controllers/home.dart';
 import 'package:linegitud/routes/router.dart';
 
@@ -23,7 +25,7 @@ class Home extends StatelessWidget {
             actionsIconTheme: IconThemeData(color: theme.colorScheme.primary),
             actions: <Widget>[
               IconButton(
-                icon: const Icon(Icons.settings),
+                icon: const Icon(FontAwesomeIcons.gear),
                 tooltip: "Paramètres",
                 onPressed: () {
                   Get.toNamed(AppRoutes.settings);
@@ -46,13 +48,13 @@ class Home extends StatelessWidget {
               showUnselectedLabels: false,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.home, size: 24), label: "Accueil"),
+                    icon: Icon(FontAwesomeIcons.listCheck, size: 24), label: "Historique"),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.add_box_outlined, size: 24),
-                    label: "Nouveau trait"),
+                    icon: Icon(FontAwesomeIcons.squarePlus, size: 24),
+                    label: "Nouveau"),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.view_list, size: 24),
-                    label: "Liste des traits"),
+                    icon: Icon(FontAwesomeIcons.rankingStar, size: 24),
+                    label: "Classement"),
               ],
               currentIndex: controller.selectedIndex.value,
               onTap: controller.selectMenu,
