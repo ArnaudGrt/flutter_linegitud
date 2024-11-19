@@ -36,15 +36,12 @@ class UserRankingController extends GetxController {
   List computeUsersLines(){
     final users = fetchUsers();
     final lines = fetchLines();
-    List res = [];
 
-    for (final user in users){
+    return users.map((user) {
       final linesCount = lines.linesCount(user.name);
-
-      res.add(RankingUser(name: user.name, icon: user.icon, total: linesCount, totalText: linesCount.toString()));
-    }
-
-    return res;
+      
+      return RankingUser(name: user.name, icon: user.icon, total: linesCount, totalText: linesCount.toString());
+    }).toList();
   }
 
   Future<void> getRankingList(bool withLoader){
