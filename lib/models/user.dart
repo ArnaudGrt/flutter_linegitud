@@ -23,6 +23,30 @@ class User {
   }
 }
 
+class CleanUser {
+  String name;
+  String icon;
+
+  CleanUser({
+    required this.name,
+    required this.icon
+  });
+}
+
+class RankingUser {
+  String name;
+  String icon;
+  int total;
+  String totalText;
+
+  RankingUser({
+    required this.name,
+    required this.icon,
+    required this.total,
+    required this.totalText
+  });
+}
+
 class UserList {
   List<User> userList;
 
@@ -40,7 +64,9 @@ class UserList {
     return UserList(userList: userList);
   }
 
-  List namesOnly(){
-    return userList.map((u) => u.name).toList();
+  List getCleanUsers(){
+    return userList.map((u) {
+      return CleanUser(name: u.name, icon: u.icon);
+    }).toList();
   }
 }
