@@ -84,128 +84,105 @@ class UserRanking extends StatelessWidget {
                             )
                           ],
                         )
-                      : SingleChildScrollView(
-                          child: Column(
-                          children: [
-                            Stack(
-                              children: [
-                                podiumHeader(controller.ranking.value),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 164, left: 32, right: 32, bottom: 8),
-                                  child: ListView.separated(
-                                      primary: false,
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      separatorBuilder:
-                                          (BuildContext context, int index) =>
-                                              const SizedBox(
-                                                height: 12,
+                      : Stack(children: [
+                          podiumHeader(controller.ranking.value, theme),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 164, left: 32, right: 32, bottom: 8),
+                            child: ListView.separated(
+                                primary: false,
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        const SizedBox(
+                                          height: 12,
+                                        ),
+                                itemCount: controller.ranking.value.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final user = controller.ranking.value[index];
+
+                                  rankingColor(int index) {
+                                    if (index == 0) {
+                                      return Colors.yellow[700];
+                                    } else if (index == 1) {
+                                      return Colors.grey[400];
+                                    } else if (index == 2) {
+                                      return Colors.brown[700];
+                                    }
+
+                                    return Colors.white;
+                                  }
+
+                                  rankingTextColor(int index) {
+                                    if ([0, 1, 2].contains(index)) {
+                                      return Colors.white;
+                                    }
+
+                                    return Colors.black;
+                                  }
+
+                                  return Container(
+                                      decoration: BoxDecoration(
+                                          color: rankingColor(index),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(24)),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black54,
+                                              blurRadius: 20.0,
+                                              spreadRadius: -20.0,
+                                              offset: Offset(0.0, 25.0),
+                                            )
+                                          ]),
+                                      height: 48,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 4, right: 20),
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor:
+                                                    theme.colorScheme.primary,
+                                                radius: 20,
+                                                backgroundImage:
+                                                    NetworkImage(user.avatar),
                                               ),
-                                      itemCount:
-                                          controller.ranking.value.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final user =
-                                            controller.ranking.value[index];
-
-                                        rankingColor(int index) {
-                                          if (index == 0) {
-                                            return Colors.yellow[700];
-                                          } else if (index == 1) {
-                                            return Colors.grey[400];
-                                          } else if (index == 2) {
-                                            return Colors.brown[700];
-                                          }
-
-                                          return Colors.white;
-                                        }
-
-                                        rankingTextColor(int index) {
-                                          if ([0, 1, 2].contains(index)) {
-                                            return Colors.white;
-                                          }
-
-                                          return Colors.black;
-                                        }
-
-                                        return Container(
-                                            decoration: BoxDecoration(
-                                                color: rankingColor(index),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(24)),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(.5),
-                                                      spreadRadius: 3,
-                                                      blurRadius: 5,
-                                                      offset:
-                                                          const Offset(0, 3))
-                                                ]),
-                                            height: 48,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4, right: 20),
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    CircleAvatar(
-                                                      backgroundColor: theme
-                                                          .colorScheme.primary,
-                                                      radius: 20,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                              user.avatar),
-                                                    ),
-                                                    Text(
-                                                      user.name,
-                                                      style: TextStyle(
-                                                          color:
-                                                              rankingTextColor(
-                                                                  index),
-                                                          fontSize: 14),
-                                                    ),
-                                                    Text(
-                                                      user.total.toString(),
-                                                      style: TextStyle(
-                                                          color:
-                                                              rankingTextColor(
-                                                                  index),
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 18),
-                                                    )
-                                                  ]),
-                                            ));
-                                      }),
-                                ),
-                              ],
-                            )
-                          ],
-                        )))))
+                                              Text(
+                                                user.name,
+                                                style: TextStyle(
+                                                    color:
+                                                        rankingTextColor(index),
+                                                    fontSize: 14),
+                                              ),
+                                              Text(
+                                                user.total.toString(),
+                                                style: TextStyle(
+                                                    color:
+                                                        rankingTextColor(index),
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18),
+                                              )
+                                            ]),
+                                      ));
+                                }),
+                          ),
+                        ]))))
         ],
       ),
     );
   }
 
-  Widget podiumHeader(List ranking) {
+  Widget podiumHeader(List ranking, theme) {
     return Container(
         decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.elliptical(64, 64),
-                bottomRight: Radius.elliptical(64, 64)),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(.5),
-                  spreadRadius: 3,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3))
-            ]),
+          color: theme.colorScheme.secondary,
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.elliptical(64, 64),
+              bottomRight: Radius.elliptical(64, 64)),
+        ),
         child: Padding(
             padding: const EdgeInsets.only(bottom: 48),
             child: Row(
