@@ -37,6 +37,14 @@ mockLine() {
           "recipient": "Claire",
           "state": "cancelled",
           "created_at": "2024-08-31 12:01:51"
+        },
+        {
+          "id": 5,
+          "reason": "Aucune raison",
+          "sender": "Frédéric",
+          "recipient": "Marion",
+          "state": "validated",
+          "created_at": "2024-08-31 12:01:51"
         }
       ] 
     }
