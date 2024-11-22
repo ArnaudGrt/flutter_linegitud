@@ -40,10 +40,8 @@ class UserRankingController extends GetxController {
     return users.map((user) {
       final linesCount = lines.linesCount(user.name);
       
-      return RankingUser(name: user.name, icon: user.icon, total: linesCount, totalText: linesCount.toString());
-    }).toList();
-
-    // TODO : sort by line count
+      return RankingUser(name: user.name, avatar: user.avatar, total: linesCount, totalText: linesCount.toString());
+    }).toList()..sort((a, b) => b.total.compareTo(a.total));
   }
 
   Future<void> getRankingList(bool withLoader){

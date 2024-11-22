@@ -89,10 +89,10 @@ class UserRanking extends StatelessWidget {
                           children: [
                             Stack(
                               children: [
-                                podiumHeader(),
+                                podiumHeader(controller.ranking.value),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 160, left: 32, right: 32, bottom: 8),
+                                      top: 164, left: 32, right: 32, bottom: 8),
                                   child: ListView.separated(
                                       primary: false,
                                       scrollDirection: Axis.vertical,
@@ -100,7 +100,7 @@ class UserRanking extends StatelessWidget {
                                       separatorBuilder:
                                           (BuildContext context, int index) =>
                                               const SizedBox(
-                                                height: 4,
+                                                height: 12,
                                               ),
                                       itemCount:
                                           controller.ranking.value.length,
@@ -109,10 +109,78 @@ class UserRanking extends StatelessWidget {
                                         final user =
                                             controller.ranking.value[index];
 
-                                        return SizedBox(
-                                          height: 125,
-                                          child: Text(user.name),
-                                        );
+                                        rankingColor(int index) {
+                                          if (index == 0) {
+                                            return Colors.yellow[700];
+                                          } else if (index == 1) {
+                                            return Colors.grey[400];
+                                          } else if (index == 2) {
+                                            return Colors.brown[700];
+                                          }
+
+                                          return Colors.white;
+                                        }
+
+                                        rankingTextColor(int index) {
+                                          if ([0, 1, 2].contains(index)) {
+                                            return Colors.white;
+                                          }
+
+                                          return Colors.black;
+                                        }
+
+                                        return Container(
+                                            decoration: BoxDecoration(
+                                                color: rankingColor(index),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(24)),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(.5),
+                                                      spreadRadius: 3,
+                                                      blurRadius: 5,
+                                                      offset:
+                                                          const Offset(0, 3))
+                                                ]),
+                                            height: 48,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4, right: 20),
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    CircleAvatar(
+                                                      backgroundColor: theme
+                                                          .colorScheme.primary,
+                                                      radius: 20,
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                              user.avatar),
+                                                    ),
+                                                    Text(
+                                                      user.name,
+                                                      style: TextStyle(
+                                                          color:
+                                                              rankingTextColor(
+                                                                  index),
+                                                          fontSize: 14),
+                                                    ),
+                                                    Text(
+                                                      user.total.toString(),
+                                                      style: TextStyle(
+                                                          color:
+                                                              rankingTextColor(
+                                                                  index),
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 18),
+                                                    )
+                                                  ]),
+                                            ));
                                       }),
                                 ),
                               ],
@@ -124,13 +192,20 @@ class UserRanking extends StatelessWidget {
     );
   }
 
-  Widget podiumHeader() {
+  Widget podiumHeader(List ranking) {
     return Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
             color: Colors.red,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.elliptical(64, 64),
-                bottomRight: Radius.elliptical(64, 64))),
+                bottomRight: Radius.elliptical(64, 64)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(.5),
+                  spreadRadius: 3,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3))
+            ]),
         child: Padding(
             padding: const EdgeInsets.only(bottom: 48),
             child: Row(
@@ -139,15 +214,18 @@ class UserRanking extends StatelessWidget {
                 children: [
                   Transform.scale(
                     scale: 0.75,
-                    child: podiumElement(2, Colors.grey[400]),
+                    child:
+                        podiumElement(2, Colors.grey[400], ranking[1].avatar),
                   ),
-                  podiumElement(1, Colors.yellow[700]),
+                  podiumElement(1, Colors.yellow[700], ranking[0].avatar),
                   Transform.scale(
-                      scale: 0.65, child: podiumElement(3, Colors.brown[700]))
+                      scale: 0.65,
+                      child: podiumElement(
+                          3, Colors.brown[700], ranking[2].avatar))
                 ])));
   }
 
-  Widget podiumElement(int rank, color) {
+  Widget podiumElement(int rank, color, String image) {
     return SizedBox(
       height: 150,
       width: 110,
@@ -158,11 +236,10 @@ class UserRanking extends StatelessWidget {
               child: CircleAvatar(
                 backgroundColor: color,
                 radius: 55,
-                child: const CircleAvatar(
+                child: CircleAvatar(
                     backgroundColor: Colors.green,
                     radius: 50,
-                    backgroundImage: NetworkImage(
-                        "https://static.fundacion-affinity.org/cdn/farfuture/PVbbIC-0M9y4fPbbCsdvAD8bcjjtbFc0NSP3lRwlWcE/mtime:1643275542/sites/default/files/los-10-sonidos-principales-del-perro.jpg")),
+                    backgroundImage: NetworkImage(image)),
               )),
           Positioned(
             left: 42,
