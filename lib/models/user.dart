@@ -4,13 +4,13 @@ class User {
   int id;
   String name;
   String password;
-  String icon;
+  String avatar;
 
   User({
     required this.id,
     required this.name,
     required this.password,
-    required this.icon
+    required this.avatar
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -18,30 +18,30 @@ class User {
       id: json['id'],
       name: json['name'],
       password: json['password'],
-      icon: json['icon']
+      avatar: json['avatar']
     );
   }
 }
 
 class CleanUser {
   String name;
-  String icon;
+  String avatar;
 
   CleanUser({
     required this.name,
-    required this.icon
+    required this.avatar
   });
 }
 
 class RankingUser {
   String name;
-  String icon;
+  String avatar;
   int total;
   String totalText;
 
   RankingUser({
     required this.name,
-    required this.icon,
+    required this.avatar,
     required this.total,
     required this.totalText
   });
@@ -66,7 +66,7 @@ class UserList {
 
   List getCleanUsers(){
     return userList.map((u) {
-      return CleanUser(name: u.name, icon: u.icon);
+      return CleanUser(name: u.name, avatar: u.avatar);
     }).toList();
   }
 }
