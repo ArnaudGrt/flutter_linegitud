@@ -35,7 +35,7 @@ class AppRoutes {
     ),
     GetPage(
       name: newLine,
-      page: () => const NewLine(),
+      page: () => NewLine(),
       bindings: [
         NewLineBindings()
       ]
