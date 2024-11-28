@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
-import 'package:linegitud/api/mocks/line.dart';
+import 'package:linegitud/controllers/db.dart';
 import 'package:linegitud/models/line.dart';
 
 class HistoryController extends GetxController {
+  final DataBaseController dbController = Get.find();
+
   Rx<LineList> lineList = Rx(LineList(lineList: []));
   final durationValue = 2;
   final reasonLength = 75;
@@ -33,31 +35,49 @@ class HistoryController extends GetxController {
   }
 
   // DATA FUNCTIONS
-  void fetchLinesHistory() {
-    final jsonData = mockLine(); // HARDCODED LINELIST FROM MOCK
+  // void fetchLinesHistory() {
+  //   final jsonData = mockLine(); // HARDCODED LINELIST FROM MOCK
 
-    lineList.value = LineList.fromJson(jsonData, ['validated']);
-  }
+  //   lineList.value = LineList.fromJson(jsonData, ['validated']);
+  // }
 
-  Future<void> getLinesHistory(bool withLoader) async {
-    if(withLoader){
-      toggleLoader(true);
-    }
+  Future<List<Line>> fetchLinesHistory() async {
+    final linesQuery = await dbController.database.rawQuery("SELECT * FROM lines ORDER BY created_at");
 
-    Timer(Duration(seconds: durationValue), () {
-      fetchLinesHistory();
-      toggleLoader(false);
+    return linesQuery.map((line) {
+      return Line(id: line.id, reason: line.reason, sender: line.sender, recipient: line.recipient, state: line.state, createdAt: DateTime.parse(line.created_at));
     });
-
-    return Future.delayed(Duration(seconds: durationValue));
   }
 
-  void initLinesHistory(){
-    getLinesHistory(true);
+  // Future<void> getLinesHistory(bool withLoader) async {
+  //   if(withLoader){
+  //     toggleLoader(true);
+  //   }
+
+  //   Timer(Duration(seconds: durationValue), () {
+  //     fetchLinesHistory();
+  //     toggleLoader(false);
+  //   });
+
+  //   return Future.delayed(Duration(seconds: durationValue));
+  // }
+
+  Future<void> initLinesHistory() async {
+    final linesList = await fetchLinesHistory();
+
+    lineList.value = LineList(lineList: linesList);
   }
 
-  void refreshLinesHistory() async {
-    await getLinesHistory(false);
+  // void initLinesHistory(){
+  //   getLinesHistory(true);
+  // }
+
+  Future<void> refreshLinesHistory() async {
+    toggleLoader(true);
+    final linesList = await fetchLinesHistory();
+    toggleLoader(false);
+
+    lineList.value = LineList(lineList: linesList);
   }
 
   void toggleLoader(bool value){
