@@ -35,6 +35,8 @@ dependencies:
   font_awesome_flutter:
   sqflite:
   sqflite_common_ffi:
+  sqlite3_flutter_libs:
+  path_provider:
   path:
 
 
