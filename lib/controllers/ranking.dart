@@ -1,68 +1,79 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-
-import 'package:linegitud/api/mocks/line.dart';
-import 'package:linegitud/api/mocks/user.dart';
-
+import 'package:linegitud/controllers/db.dart';
 import 'package:linegitud/models/line.dart';
 import 'package:linegitud/models/user.dart';
 
 class UserRankingController extends GetxController {
+  final DataBaseController dbController = Get.find();
+
   Rx<List> ranking = Rx([]);
   final durationValue = 2;
   final isLoading = false.obs;
 
   @override
   void onInit(){
-    initRankingList();
+    initRanking();
 
     super.onInit();
   }
+ 
+  Future<List<RankingUser>> fetchRanking() async {
+    final users = await fetchUsers();
+    final lines = await fetchLines();
 
-  List<dynamic> fetchUsers(){
-    final usersData = mockUser();
-    final usersList = UserList.fromJson(usersData);
-
-    return usersList.getCleanUsers();
-  }
-
-  LineList fetchLines(){
-    final linesData = mockLine();
-
-    return LineList.fromJson(linesData, ['validated']);
-  }
-
-  List computeUsersLines(){
-    final users = fetchUsers();
-    final lines = fetchLines();
-
-    return users.map((user) {
+    return users.map((user){
       final linesCount = lines.linesCount(user.name);
-      
+
       return RankingUser(name: user.name, avatar: user.avatar, total: linesCount, totalText: linesCount.toString());
-    }).toList()..sort((a, b) => b.total.compareTo(a.total));
+    }).toList();
   }
 
-  Future<void> getRankingList(bool withLoader){
-    if(withLoader){
-      toggleLoader(true);
-    }
+  Future<void> initRanking() async {
+    final rankingList = await fetchRanking();
 
-    Timer(Duration(seconds: durationValue), () {
-      ranking.value = computeUsersLines();
-      toggleLoader(false);
-    });
-
-    return Future.delayed(Duration(seconds: durationValue));
+    ranking.value = rankingList;
   }
 
-  void initRankingList(){
-    getRankingList(true);
+  Future<void> refreshRankingList() async {
+    toggleLoader(true);
+    final rankingList = await fetchRanking();
+    toggleLoader(false);
+
+    ranking.value = rankingList;
   }
 
-  void refreshRankingList() async {
-    await getRankingList(false);
+  Future <List<CleanUser>> fetchUsers() async {
+    final usersQuery = await dbController.database.rawQuery("SELECT name, avatar FROM users");
+
+    final usersArray = [
+      for(final {
+        'name': name as String,
+        'avatar': avatar as String
+      } in usersQuery)
+        CleanUser(name: name, avatar: avatar)
+    ];
+
+    return usersArray.toList();
+  }
+
+  Future<LineList> fetchLines() async {
+    final linesQuery = await dbController.database.query("lines");
+
+    final linesArray = [
+      for(final {
+          'id': id as int,
+          'sender': sender as String,
+          'recipient': recipient as String,
+          'reason': reason as String,
+          'state': state as String,
+          'created_at': createdAt as DateTime
+      } in linesQuery)
+        Line(id: id, reason: reason, sender: sender, recipient: recipient, state: state, createdAt: createdAt)
+    ];
+
+    return LineList(lineList: linesArray);
   }
 
   void toggleLoader(bool value){
