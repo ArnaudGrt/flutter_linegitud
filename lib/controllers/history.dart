@@ -34,47 +34,31 @@ class HistoryController extends GetxController {
     return lineList.value.getFromIndex(index);
   }
 
-  // DATA FUNCTIONS
-  // void fetchLinesHistory() {
-  //   final jsonData = mockLine(); // HARDCODED LINELIST FROM MOCK
-
-  //   lineList.value = LineList.fromJson(jsonData, ['validated']);
-  // }
-
-  Future<List<Line>> fetchLinesHistory() async {
+  Future<List<Line>> fetchLines() async {
     final linesQuery = await dbController.database.rawQuery("SELECT * FROM lines ORDER BY created_at");
 
-    return linesQuery.map((line) {
-      return Line(id: line.id, reason: line.reason, sender: line.sender, recipient: line.recipient, state: line.state, createdAt: DateTime.parse(line.created_at));
-    });
+    return [
+      for(final {
+          'id': id as int,
+          'sender': sender as String,
+          'recipient': recipient as String,
+          'reason': reason as String,
+          'state': state as String,
+          'created_at': createdAt as String
+      } in linesQuery)
+        Line(id: id, reason: reason, sender: sender, recipient: recipient, state: state, createdAt: DateTime.parse(createdAt))
+    ];
   }
 
-  // Future<void> getLinesHistory(bool withLoader) async {
-  //   if(withLoader){
-  //     toggleLoader(true);
-  //   }
-
-  //   Timer(Duration(seconds: durationValue), () {
-  //     fetchLinesHistory();
-  //     toggleLoader(false);
-  //   });
-
-  //   return Future.delayed(Duration(seconds: durationValue));
-  // }
-
   Future<void> initLinesHistory() async {
-    final linesList = await fetchLinesHistory();
+    final linesList = await fetchLines();
 
     lineList.value = LineList(lineList: linesList);
   }
 
-  // void initLinesHistory(){
-  //   getLinesHistory(true);
-  // }
-
   Future<void> refreshLinesHistory() async {
     toggleLoader(true);
-    final linesList = await fetchLinesHistory();
+    final linesList = await fetchLines();
     toggleLoader(false);
 
     lineList.value = LineList(lineList: linesList);
