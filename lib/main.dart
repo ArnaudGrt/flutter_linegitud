@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:linegitud/bindings/db.dart';
+import 'package:linegitud/bindings/home.dart';
 
 import 'package:linegitud/controllers/db.dart';
 import 'package:linegitud/routes/router.dart';
@@ -18,9 +18,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => DataBaseController(), fenix: true);
+    final controller = Get.put(DataBaseController());
 
-    print(DataBaseController().initLoading.value);
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
@@ -32,10 +31,11 @@ class App extends StatelessWidget {
         useMaterial3: true,
       ),
       scrollBehavior: const MaterialScrollBehavior()
-        .copyWith(dragDevices: PointerDeviceKind.values.toSet()),
-      home: Obx(() => DataBaseController().initLoading.value ? const Loader() : const Home()),
+          .copyWith(dragDevices: PointerDeviceKind.values.toSet()),
+      home: Obx(
+          () => controller.initLoading.value ? const Loader() : const Home()),
       getPages: AppRoutes.pages,
-      initialBinding: DataBaseBindings(),
+      initialBinding: HomeBindings(),
     );
   }
 }
