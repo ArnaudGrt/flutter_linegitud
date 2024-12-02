@@ -27,19 +27,19 @@ class UserRankingController extends GetxController {
       final linesCount = lines.linesCount(user.name);
 
       return RankingUser(name: user.name, avatar: user.avatar, total: linesCount, totalText: linesCount.toString());
-    }).toList();
+    }).toList()..sort((a, b) => b.total.compareTo(a.total));
   }
 
   Future<void> initRanking() async {
+    toggleLoader(true);
     final rankingList = await fetchRanking();
+    toggleLoader(false);
 
     ranking.value = rankingList;
   }
 
   Future<void> refreshRankingList() async {
-    toggleLoader(true);
     final rankingList = await fetchRanking();
-    toggleLoader(false);
 
     ranking.value = rankingList;
   }
@@ -68,9 +68,9 @@ class UserRankingController extends GetxController {
           'recipient': recipient as String,
           'reason': reason as String,
           'state': state as String,
-          'created_at': createdAt as DateTime
+          'created_at': createdAt as String
       } in linesQuery)
-        Line(id: id, reason: reason, sender: sender, recipient: recipient, state: state, createdAt: createdAt)
+        Line(id: id, reason: reason, sender: sender, recipient: recipient, state: state, createdAt: DateTime.parse(createdAt))
     ];
 
     return LineList(lineList: linesArray);
