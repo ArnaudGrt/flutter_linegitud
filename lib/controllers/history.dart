@@ -35,7 +35,7 @@ class HistoryController extends GetxController {
   }
 
   Future<List<Line>> fetchLines() async {
-    final linesQuery = await dbController.database.rawQuery("SELECT * FROM lines ORDER BY created_at");
+    final linesQuery = await dbController.database.rawQuery("SELECT * FROM lines ORDER BY created_at DESC");
 
     return [
       for(final {
@@ -51,15 +51,15 @@ class HistoryController extends GetxController {
   }
 
   Future<void> initLinesHistory() async {
+    toggleLoader(true);
     final linesList = await fetchLines();
-
+    toggleLoader(false);
+    
     lineList.value = LineList(lineList: linesList);
   }
 
   Future<void> refreshLinesHistory() async {
-    toggleLoader(true);
     final linesList = await fetchLines();
-    toggleLoader(false);
 
     lineList.value = LineList(lineList: linesList);
   }
