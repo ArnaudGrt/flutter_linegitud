@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:linegitud/controllers/db.dart';
+import 'package:linegitud/models/db.dart';
 
 import 'package:linegitud/models/line.dart';
 import 'package:linegitud/models/user.dart';
@@ -12,6 +13,8 @@ class NewLineController extends GetxController {
   final DataBaseController dbController = Get.find();
 
   final formKey = GlobalKey<FormState>();
+  final isLoading = false.obs;
+  
   Rx<List> users = Rx([]);
 
   Rx lineSender = Rx(null);
@@ -61,18 +64,35 @@ class NewLineController extends GetxController {
     return LineList(lineList: linesArray);
   }
 
-  void createLine() async {
+  Future<DbResult> createLine() async {
+    toggleLoader(true);
+
     final lines = await fetchLines();
     final linesCount = lines.linesLength();
     final nextId = linesCount + 1;
-    final createdAt = DateFormat("y/M/d H:m:s").format(DateTime.now());
+    final createdAt = DateFormat("y-MM-dd HH:mm:ss").format(DateTime.now());
 
-    await dbController.database.rawInsert(
+    int res = await dbController.database.rawInsert(
     '''
       INSERT INTO lines(id, sender, recipient, reason, state, created_at)
         VALUES
         (?, ?, ?, ?, ?, ?)
     ''',
     [nextId, lineSender.value, lineRecipient.value, lineReason.value, 'validated', createdAt]);
+
+    toggleLoader(false);
+
+    if(res == nextId){
+      return DbResult(success: true, id: res);
+    }
+
+    return DbResult(success: false, error: "Tout ne s'est pas passé correctement... Il y eu un problème lors de l'ajout du trait...");
+  }
+
+  void toggleLoader(bool value){
+    if(isLoading.value == value) return;
+
+    isLoading.value = value;
+    isLoading.refresh();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:linegitud/controllers/home.dart';
 import 'package:linegitud/controllers/new_line.dart';
 import 'package:linegitud/models/user.dart';
 
@@ -8,6 +9,7 @@ class NewLine extends StatelessWidget {
   NewLine({super.key});
 
   final NewLineController controller = Get.find();
+  final HomeController homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -298,38 +300,98 @@ class NewLine extends StatelessWidget {
                                           color: theme.colorScheme.primary,
                                           width: 0.4))),
                             )),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8, bottom: 8),
-                                child: FilledButton.icon(
-                                  onPressed: () {
-                                    if (controller.formKey.currentState!
-                                        .validate()) {
-                                      controller.createLine();
-                                      return;
-                                    }
-                                  },
-                                  label: const Text("Envoyer"),
-                                  icon: const Icon(
-                                    FontAwesomeIcons.arrowRight,
-                                    size: 16,
-                                  ),
-                                  iconAlignment: IconAlignment.end,
-                                )),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8, bottom: 8),
-                                child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      controller.formKey.currentState!.reset();
-                                    },
-                                    label: const Text("Réinitialiser")))
-                          ],
-                        ),
+                        Obx(() => controller.isLoading.value
+                            ? loaderSubmit()
+                            : formSubmit())
                       ],
                     )))));
+  }
+
+  Widget formSubmit() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
+            child: FilledButton.icon(
+              onPressed: () async {
+                if (controller.formKey.currentState!.validate()) {
+                  final result = await controller.createLine();
+
+                  if (result.success) {
+                    Get.dialog(successDialog(result.success, null),
+                        barrierDismissible: false);
+                    return;
+                  }
+
+                  Get.dialog(successDialog(result.success, result.error),
+                      barrierDismissible: false);
+                  return;
+                }
+              },
+              label: const Text("Envoyer"),
+              icon: const Icon(
+                FontAwesomeIcons.arrowRight,
+                size: 16,
+              ),
+              iconAlignment: IconAlignment.end,
+            )),
+        Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
+            child: ElevatedButton.icon(
+                onPressed: () {
+                  controller.formKey.currentState!.reset();
+                },
+                label: const Text("Réinitialiser")))
+      ],
+    );
+  }
+
+  Widget loaderSubmit() {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircularProgressIndicator(),
+      ],
+    );
+  }
+
+  Widget successDialog(bool success, String? errorText) {
+    return AlertDialog(
+        icon: success
+            ? const Icon(FontAwesomeIcons.circleCheck,
+                color: Colors.lime, size: 48)
+            : const Icon(FontAwesomeIcons.circleExclamation,
+                color: Colors.red, size: 48),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+                child: success
+                    ? const Text(
+                        "Le trait a correctement été ajouté à la personne concernée !",
+                        style: TextStyle(fontSize: 14),
+                        textAlign: TextAlign.center,
+                      )
+                    : Text(
+                        errorText ?? "",
+                        style: const TextStyle(fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ))
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+
+              if (success) {
+                homeController.selectMenu(0);
+              }
+            },
+            child: const Text('Fermer'),
+          ),
+        ],
+        actionsPadding: const EdgeInsets.only(bottom: 4, right: 12));
   }
 }
