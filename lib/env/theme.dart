@@ -84,9 +84,7 @@ class LinegitudTheme {
       colorScheme: LinegitudTheme.lightColorScheme,
       scaffoldBackgroundColor: lightColorScheme.surfaceBright,
       appBarTheme: AppBarTheme(
-          backgroundColor: lightColorScheme.surfaceContainerLowest,
-          actionsIconTheme: IconThemeData(color: lightColorScheme.primary),
-          titleTextStyle: TextStyle(color: lightColorScheme.onSurface)));
+          backgroundColor: lightColorScheme.surfaceContainerLowest));
 
   static ThemeData darkTheme = ThemeData(
       fontFamily: fontFamily,
@@ -94,8 +92,6 @@ class LinegitudTheme {
       brightness: Brightness.dark,
       colorScheme: LinegitudTheme.darkColorScheme,
       scaffoldBackgroundColor: darkColorScheme.surfaceBright,
-      appBarTheme: AppBarTheme(
-          backgroundColor: darkColorScheme.surfaceContainerLowest,
-          actionsIconTheme: IconThemeData(color: darkColorScheme.primary),
-          titleTextStyle: TextStyle(color: darkColorScheme.onSurface)));
+      appBarTheme:
+          AppBarTheme(backgroundColor: darkColorScheme.surfaceContainerLowest));
 }
