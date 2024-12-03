@@ -4,6 +4,7 @@ import 'package:linegitud/bindings/history.dart';
 import 'package:linegitud/bindings/home.dart';
 import 'package:linegitud/bindings/ranking.dart';
 import 'package:linegitud/bindings/new_line.dart';
+import 'package:linegitud/bindings/settings.dart';
 
 import 'package:linegitud/screens/home.dart';
 import 'package:linegitud/screens/ranking.dart';
@@ -49,8 +50,11 @@ class AppRoutes {
     ),
     GetPage(
       name: settings,
-      page: () => const Settings(),
+      page: () => Settings(),
       transition: Transition.leftToRight,
+      bindings: [
+        SettingsBindings()
+      ]
     )
   ];
 }
