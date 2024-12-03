@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Theme {
+class LinegitudTheme {
   static String fontFamily = "Poppins";
 
   static const lightColorScheme = ColorScheme(
@@ -78,10 +78,24 @@ class Theme {
   );
 
   static ThemeData lightTheme = ThemeData(
-
-  );
+      fontFamily: fontFamily,
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorScheme: LinegitudTheme.lightColorScheme,
+      scaffoldBackgroundColor: lightColorScheme.surfaceBright,
+      appBarTheme: AppBarTheme(
+          backgroundColor: lightColorScheme.surfaceContainerLowest,
+          actionsIconTheme: IconThemeData(color: lightColorScheme.primary),
+          titleTextStyle: TextStyle(color: lightColorScheme.onSurface)));
 
   static ThemeData darkTheme = ThemeData(
-
-  );
+      fontFamily: fontFamily,
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: LinegitudTheme.darkColorScheme,
+      scaffoldBackgroundColor: darkColorScheme.surfaceBright,
+      appBarTheme: AppBarTheme(
+          backgroundColor: darkColorScheme.surfaceContainerLowest,
+          actionsIconTheme: IconThemeData(color: darkColorScheme.primary),
+          titleTextStyle: TextStyle(color: darkColorScheme.onSurface)));
 }
