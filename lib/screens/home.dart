@@ -17,15 +17,19 @@ class Home extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-            title: Obx(() => Text(controller.currentAppbarTitle.value,
-                style: const TextStyle(
-                  color: Colors.black,
-                ))),
-            backgroundColor: Colors.white,
-            actionsIconTheme: IconThemeData(color: theme.colorScheme.primary),
+            title: Obx(() => Text(
+                  controller.currentAppbarTitle.value.toUpperCase(),
+                  style: TextStyle(
+                      color: theme.colorScheme.primary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                )),
             actions: <Widget>[
               IconButton(
-                icon: const Icon(FontAwesomeIcons.gear),
+                icon: Icon(
+                  FontAwesomeIcons.gear,
+                  color: theme.colorScheme.tertiary,
+                ),
                 tooltip: "Paramètres",
                 onPressed: () {
                   Get.toNamed(AppRoutes.settings);
@@ -35,7 +39,22 @@ class Home extends StatelessWidget {
             bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(4.0),
                 child: Container(
-                  color: theme.colorScheme.primary,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: <Color>[
+                        Color(0xFF48C6A9),
+                        Color(0xFF529FCB),
+                        Color(0xFFF36D6C),
+                        Color(0xFFF8AE35),
+                      ],
+                          stops: <double>[
+                        0.0,
+                        4.3,
+                        7.6,
+                        1.0
+                      ])),
                   height: 4.0,
                 ))),
         body: Navigator(
@@ -48,7 +67,8 @@ class Home extends StatelessWidget {
               showUnselectedLabels: false,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                    icon: Icon(FontAwesomeIcons.listCheck, size: 24), label: "Historique"),
+                    icon: Icon(FontAwesomeIcons.listCheck, size: 24),
+                    label: "Historique"),
                 BottomNavigationBarItem(
                     icon: Icon(FontAwesomeIcons.squarePlus, size: 24),
                     label: "Nouveau"),
