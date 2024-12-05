@@ -82,7 +82,7 @@ class LinegitudTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: LinegitudTheme.lightColorScheme,
-      scaffoldBackgroundColor: lightColorScheme.surfaceBright,
+      scaffoldBackgroundColor: lightColorScheme.surface,
       appBarTheme: AppBarTheme(
           backgroundColor: lightColorScheme.surfaceContainerLowest));
 
@@ -91,7 +91,7 @@ class LinegitudTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: LinegitudTheme.darkColorScheme,
-      scaffoldBackgroundColor: darkColorScheme.surfaceBright,
+      scaffoldBackgroundColor: darkColorScheme.surface,
       appBarTheme:
           AppBarTheme(backgroundColor: darkColorScheme.surfaceContainerLowest));
 }
