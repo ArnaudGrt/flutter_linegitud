@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:linegitud/controllers/settings.dart';
-
+import 'package:linegitud/routes/router.dart';
 class Settings extends StatelessWidget {
   Settings({super.key});
 
@@ -14,17 +14,19 @@ class Settings extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
             backgroundColor: theme.colorScheme.surfaceContainerLowest,
-            iconTheme: IconThemeData(color: theme.colorScheme.primary),
-            titleTextStyle: TextStyle(color: theme.colorScheme.onSurface),
-            title: Text(
-              "Paramètres",
-              style: TextStyle(color: theme.colorScheme.primary),
-            ),
+            iconTheme:
+                IconThemeData(color: theme.colorScheme.tertiaryContainer),
+            title: Text("Paramètres".toUpperCase(),
+                style: TextStyle(
+                    color: theme.colorScheme.tertiary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500)),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
               tooltip: "Retour",
               onPressed: () {
                 Get.back();
+                Get.offAllNamed(AppRoutes.home, id: 1);
               },
             ),
             bottom: PreferredSize(
