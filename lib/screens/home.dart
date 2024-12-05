@@ -20,21 +20,23 @@ class Home extends StatelessWidget {
             title: Obx(() => Text(
                   controller.currentAppbarTitle.value.toUpperCase(),
                   style: TextStyle(
-                      color: theme.colorScheme.primary,
+                      color: theme.colorScheme.tertiary,
                       fontSize: 18,
                       fontWeight: FontWeight.w500),
                 )),
             actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                  FontAwesomeIcons.gear,
-                  color: theme.colorScheme.tertiary,
-                ),
-                tooltip: "Paramètres",
-                onPressed: () {
-                  Get.toNamed(AppRoutes.settings);
-                },
-              )
+              Obx(() => controller.selectedIndex.value == 0
+                  ? IconButton(
+                      icon: Icon(
+                        FontAwesomeIcons.gear,
+                        color: theme.colorScheme.tertiaryContainer,
+                      ),
+                      tooltip: "Paramètres",
+                      onPressed: () {
+                        Get.toNamed(AppRoutes.settings);
+                      },
+                    )
+                  : const SizedBox.shrink())
             ],
             bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(4.0),
@@ -62,9 +64,14 @@ class Home extends StatelessWidget {
           onGenerateRoute: controller.activePage,
         ),
         bottomNavigationBar: Obx(() => BottomNavigationBar(
+              backgroundColor: theme.colorScheme.surfaceContainerLowest,
               type: BottomNavigationBarType.fixed,
               showSelectedLabels: false,
               showUnselectedLabels: false,
+              unselectedIconTheme:
+                  IconThemeData(color: theme.colorScheme.outline),
+              selectedIconTheme:
+                  IconThemeData(color: theme.colorScheme.tertiaryContainer),
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                     icon: Icon(FontAwesomeIcons.listCheck, size: 24),
