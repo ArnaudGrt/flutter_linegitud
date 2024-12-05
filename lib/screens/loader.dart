@@ -5,12 +5,16 @@ class Loader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    var theme = Theme.of(context);
+
+    return Scaffold(
       body: Column(
         children: [
           Expanded(
               child: Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: theme.colorScheme.tertiary,
+            ),
           ))
         ],
       ),
