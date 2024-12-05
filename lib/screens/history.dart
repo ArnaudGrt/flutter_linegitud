@@ -125,9 +125,9 @@ class History extends StatelessWidget {
                                                 BorderRadius.circular(4),
                                             side: BorderSide(
                                                 color:
-                                                    theme.colorScheme.primary,
+                                                    theme.colorScheme.tertiaryContainer,
                                                 width: 0.4)),
-                                        color: Colors.white,
+                                        color: theme.colorScheme.onInverseSurface,
                                         elevation: 4,
                                         child: Padding(
                                           padding: const EdgeInsets.all(8),
