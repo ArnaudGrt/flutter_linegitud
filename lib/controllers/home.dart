@@ -43,25 +43,25 @@ class HomeController extends GetxController {
       case AppRoutes.newLine:
         return GetPageRoute(
           routeName: AppRoutes.newLine,
-          transition: Transition.downToUp,
+          transition: Transition.topLevel,
           page: () => NewLine()
         );
       case AppRoutes.ranking:
         return GetPageRoute(
           routeName: AppRoutes.ranking,
-          transition: Transition.downToUp,
+          transition: Transition.topLevel,
           page: () => UserRanking()
         );
       case AppRoutes.history:
         return GetPageRoute(
           routeName: AppRoutes.history,
-          transition: Transition.downToUp,
+          transition: Transition.topLevel,
           page: () => History()
         );
       default:
         return GetPageRoute(
           routeName: AppRoutes.history,
-          transition: Transition.downToUp,
+          transition: Transition.topLevel,
           page: () => History()
         );
     }

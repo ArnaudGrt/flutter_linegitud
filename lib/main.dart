@@ -36,7 +36,7 @@ class App extends StatelessWidget {
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.leftToRight,
+      defaultTransition: Transition.topLevel,
       transitionDuration: const Duration(milliseconds: 250),
       theme: LinegitudTheme.lightTheme,
       darkTheme: LinegitudTheme.darkTheme,
