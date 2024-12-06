@@ -83,6 +83,10 @@ class LinegitudTheme {
       brightness: Brightness.light,
       colorScheme: LinegitudTheme.lightColorScheme,
       scaffoldBackgroundColor: lightColorScheme.surface,
+      textSelectionTheme: TextSelectionThemeData(
+          cursorColor: lightColorScheme.tertiaryContainer,
+          selectionColor: lightColorScheme.tertiaryContainer,
+          selectionHandleColor: lightColorScheme.tertiaryContainer),
       appBarTheme: AppBarTheme(
           backgroundColor: lightColorScheme.surfaceContainerLowest));
 
@@ -92,6 +96,10 @@ class LinegitudTheme {
       brightness: Brightness.dark,
       colorScheme: LinegitudTheme.darkColorScheme,
       scaffoldBackgroundColor: darkColorScheme.surface,
+      textSelectionTheme: TextSelectionThemeData(
+          cursorColor: darkColorScheme.tertiaryContainer,
+          selectionColor: darkColorScheme.tertiaryContainer,
+          selectionHandleColor: darkColorScheme.tertiaryContainer),
       appBarTheme:
           AppBarTheme(backgroundColor: darkColorScheme.surfaceContainerLowest));
 }
