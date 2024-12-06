@@ -24,11 +24,11 @@ class NewLine extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "De qui ?",
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                              color: Colors.black,
+                              color: theme.colorScheme.inverseSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ),
@@ -44,9 +44,10 @@ class NewLine extends StatelessWidget {
 
                                   return null;
                                 },
-                                hint: const Text(
+                                hint: Text(
                                   "Émetteur",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                      color: theme.colorScheme.inverseSurface),
                                 ),
                                 items: controller.users.value
                                     .map((user) => DropdownMenuItem<CleanUser>(
@@ -62,6 +63,8 @@ class NewLine extends StatelessWidget {
                                                 children: [
                                                   CircleAvatar(
                                                       radius: 16,
+                                                      backgroundColor: theme
+                                                          .colorScheme.surface,
                                                       backgroundImage:
                                                           NetworkImage(
                                                               user.avatar)),
@@ -88,8 +91,10 @@ class NewLine extends StatelessWidget {
                                                                   .lineRecipient
                                                                   .value !=
                                                               user.name
-                                                          ? Colors.black
-                                                          : Colors.grey,
+                                                          ? theme.colorScheme
+                                                              .onSurface
+                                                          : theme.colorScheme
+                                                              .outlineVariant,
                                                     ),
                                                   ))
                                             ],
@@ -99,14 +104,15 @@ class NewLine extends StatelessWidget {
                                 onChanged: (value) {
                                   controller.lineSender.value = value?.name;
                                 },
-                                icon: const Icon(FontAwesomeIcons.angleDown,
-                                    color: Colors.black),
+                                icon: Icon(FontAwesomeIcons.angleDown,
+                                    color: theme.colorScheme.inverseSurface),
                                 decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: Colors.white,
+                                    fillColor:
+                                        theme.colorScheme.onInverseSurface,
                                     prefixIcon: Icon(
                                         FontAwesomeIcons.circleQuestion,
-                                        color: theme.colorScheme.primary),
+                                        color: theme.colorScheme.tertiary),
                                     errorBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(4),
                                         borderSide: BorderSide(
@@ -115,30 +121,29 @@ class NewLine extends StatelessWidget {
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(4),
                                         borderSide: BorderSide(
-                                            color: theme.colorScheme.primary,
+                                            color: theme
+                                                .colorScheme.tertiaryContainer,
                                             width: 0.4)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(4),
                                         borderSide: BorderSide(
-                                            color: theme.colorScheme.primary,
+                                            color: theme
+                                                .colorScheme.tertiaryContainer,
                                             width: 0.4)),
                                     focusedErrorBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(4),
                                         borderSide: BorderSide(
                                             color: theme.colorScheme.error,
                                             width: 0.4)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                        borderSide: BorderSide(
-                                            color: theme.colorScheme.primary,
-                                            width: 0.4))),
+                                    border:
+                                        OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: BorderSide(color: theme.colorScheme.tertiaryContainer, width: 0.4))),
                               ),
                             ))),
-                        const Text(
+                        Text(
                           "Pour qui ?",
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                              color: Colors.black,
+                              color: theme.colorScheme.inverseSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ),
@@ -154,9 +159,10 @@ class NewLine extends StatelessWidget {
 
                                   return null;
                                 },
-                                hint: const Text(
+                                hint: Text(
                                   "Destinataire",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                      color: theme.colorScheme.inverseSurface),
                                 ),
                                 items: controller.users.value
                                     .map((user) => DropdownMenuItem<CleanUser>(
@@ -171,6 +177,8 @@ class NewLine extends StatelessWidget {
                                                 children: [
                                                   CircleAvatar(
                                                       radius: 16,
+                                                      backgroundColor: theme
+                                                          .colorScheme.surface,
                                                       backgroundImage:
                                                           NetworkImage(
                                                               user.avatar)),
@@ -197,8 +205,10 @@ class NewLine extends StatelessWidget {
                                                                   .lineSender
                                                                   .value !=
                                                               user.name
-                                                          ? Colors.black
-                                                          : Colors.grey,
+                                                          ? theme.colorScheme
+                                                              .onSurface
+                                                          : theme.colorScheme
+                                                              .outlineVariant,
                                                     ),
                                                   ))
                                             ],
@@ -208,14 +218,15 @@ class NewLine extends StatelessWidget {
                                 onChanged: (value) {
                                   controller.lineRecipient.value = value?.name;
                                 },
-                                icon: const Icon(FontAwesomeIcons.angleDown,
-                                    color: Colors.black),
+                                icon: Icon(FontAwesomeIcons.angleDown,
+                                    color: theme.colorScheme.inverseSurface),
                                 decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: Colors.white,
+                                    fillColor:
+                                        theme.colorScheme.onInverseSurface,
                                     prefixIcon: Icon(
                                         FontAwesomeIcons.circleQuestion,
-                                        color: theme.colorScheme.primary),
+                                        color: theme.colorScheme.tertiary),
                                     errorBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(4),
                                         borderSide: BorderSide(
@@ -224,30 +235,29 @@ class NewLine extends StatelessWidget {
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(4),
                                         borderSide: BorderSide(
-                                            color: theme.colorScheme.primary,
+                                            color: theme
+                                                .colorScheme.tertiaryContainer,
                                             width: 0.4)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(4),
                                         borderSide: BorderSide(
-                                            color: theme.colorScheme.primary,
+                                            color: theme
+                                                .colorScheme.tertiaryContainer,
                                             width: 0.4)),
                                     focusedErrorBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(4),
                                         borderSide: BorderSide(
                                             color: theme.colorScheme.error,
                                             width: 0.4)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                        borderSide: BorderSide(
-                                            color: theme.colorScheme.primary,
-                                            width: 0.4))),
+                                    border:
+                                        OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: BorderSide(color: theme.colorScheme.tertiaryContainer, width: 0.4))),
                               ),
                             ))),
-                        const Text(
+                        Text(
                           "La raison ?",
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                              color: Colors.black,
+                              color: theme.colorScheme.inverseSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ),
@@ -269,11 +279,14 @@ class NewLine extends StatelessWidget {
 
                                 return null;
                               },
+                              style:
+                                  TextStyle(color: theme.colorScheme.onSurface),
+                              cursorColor: theme.colorScheme.tertiaryContainer,
                               decoration: InputDecoration(
                                   filled: true,
-                                  fillColor: Colors.white,
+                                  fillColor: theme.colorScheme.onInverseSurface,
                                   prefixIcon: Icon(FontAwesomeIcons.commentDots,
-                                      color: theme.colorScheme.primary),
+                                      color: theme.colorScheme.tertiary),
                                   errorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(4),
                                       borderSide: BorderSide(
@@ -282,12 +295,14 @@ class NewLine extends StatelessWidget {
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(4),
                                       borderSide: BorderSide(
-                                          color: theme.colorScheme.primary,
+                                          color: theme
+                                              .colorScheme.tertiaryContainer,
                                           width: 0.4)),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(4),
                                       borderSide: BorderSide(
-                                          color: theme.colorScheme.primary,
+                                          color: theme
+                                              .colorScheme.tertiaryContainer,
                                           width: 0.4)),
                                   focusedErrorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(4),
@@ -297,23 +312,39 @@ class NewLine extends StatelessWidget {
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(4),
                                       borderSide: BorderSide(
-                                          color: theme.colorScheme.primary,
+                                          color: theme.colorScheme.tertiaryContainer,
                                           width: 0.4))),
                             )),
                         Obx(() => controller.isLoading.value
-                            ? loaderSubmit()
-                            : formSubmit())
+                            ? loaderSubmit(theme)
+                            : formSubmit(theme))
                       ],
                     )))));
   }
 
-  Widget formSubmit() {
+  Widget formSubmit(theme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 8),
+            child: ElevatedButton.icon(
+                style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll<Color>(
+                        theme.colorScheme.onInverseSurface)),
+                onPressed: () {
+                  controller.formKey.currentState!.reset();
+                },
+                label: Text(
+                  "Réinitialiser",
+                  style: TextStyle(color: theme.colorScheme.onSurface),
+                ))),
+        Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
             child: FilledButton.icon(
+              style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll<Color>(
+                      theme.colorScheme.tertiary)),
               onPressed: () async {
                 if (controller.formKey.currentState!.validate()) {
                   final result = await controller.createLine();
@@ -329,29 +360,28 @@ class NewLine extends StatelessWidget {
                   return;
                 }
               },
-              label: const Text("Envoyer"),
-              icon: const Icon(
+              label: Text(
+                "Envoyer",
+                style: TextStyle(color: theme.colorScheme.onInverseSurface),
+              ),
+              icon: Icon(
                 FontAwesomeIcons.arrowRight,
+                color: theme.colorScheme.onInverseSurface,
                 size: 16,
               ),
               iconAlignment: IconAlignment.end,
             )),
-        Padding(
-            padding: const EdgeInsets.only(top: 8, bottom: 8),
-            child: ElevatedButton.icon(
-                onPressed: () {
-                  controller.formKey.currentState!.reset();
-                },
-                label: const Text("Réinitialiser")))
       ],
     );
   }
 
-  Widget loaderSubmit() {
-    return const Row(
+  Widget loaderSubmit(theme) {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircularProgressIndicator(),
+        CircularProgressIndicator(
+          color: theme.colorScheme.tertiaryContainer,
+        ),
       ],
     );
   }
