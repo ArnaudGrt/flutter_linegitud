@@ -22,12 +22,14 @@ class History extends StatelessWidget {
     var theme = Theme.of(Get.context!);
 
     if (controller.isLoading.value) {
-      return const Scaffold(
+      return Scaffold(
         body: Column(
           children: [
             Expanded(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: theme.colorScheme.tertiaryContainer,
+                ),
               ),
             )
           ],
@@ -40,8 +42,8 @@ class History extends StatelessWidget {
       children: [
         Expanded(
             child: RefreshIndicator(
-                color: Colors.white,
-                backgroundColor: theme.colorScheme.primary,
+                color: theme.colorScheme.onInverseSurface,
+                backgroundColor: theme.colorScheme.tertiary,
                 onRefresh: () async {
                   return controller.refreshLinesHistory();
                 },
@@ -61,14 +63,16 @@ class History extends StatelessWidget {
                                     Icon(
                                       FontAwesomeIcons.faceSadTear,
                                       size: 120,
-                                      color: theme.colorScheme.primary,
+                                      color:
+                                          theme.colorScheme.tertiaryContainer,
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 8),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8),
                                       child: Text(
                                           "Aucun trait n'a encore été ajouté...",
                                           style: TextStyle(
-                                              color: Colors.black,
+                                              color:
+                                                  theme.colorScheme.onSurface,
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500)),
                                     ),
@@ -79,16 +83,17 @@ class History extends StatelessWidget {
                                               homeController.selectMenu(1);
                                             },
                                             style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    theme.colorScheme.primary),
-                                            icon: const Icon(
+                                                backgroundColor: theme
+                                                    .colorScheme
+                                                    .tertiaryContainer),
+                                            icon: Icon(
                                               Icons.arrow_forward_rounded,
-                                              color: Colors.white,
+                                              color: theme.colorScheme.onInverseSurface,
                                             ),
-                                            label: const Text(
+                                            label: Text(
                                               "Nouveau trait",
                                               style: TextStyle(
-                                                  color: Colors.white),
+                                                  color: theme.colorScheme.onInverseSurface),
                                             )))
                                   ],
                                 )))
@@ -115,7 +120,8 @@ class History extends StatelessWidget {
 
                                       Get.bottomSheet(
                                         lineBottomSheet(line, theme),
-                                        backgroundColor: Colors.white,
+                                        backgroundColor:
+                                            theme.colorScheme.onInverseSurface,
                                         enableDrag: true,
                                       );
                                     },
@@ -124,10 +130,11 @@ class History extends StatelessWidget {
                                             borderRadius:
                                                 BorderRadius.circular(4),
                                             side: BorderSide(
-                                                color:
-                                                    theme.colorScheme.tertiaryContainer,
+                                                color: theme.colorScheme
+                                                    .tertiaryContainer,
                                                 width: 0.4)),
-                                        color: theme.colorScheme.onInverseSurface,
+                                        color:
+                                            theme.colorScheme.onInverseSurface,
                                         elevation: 4,
                                         child: Padding(
                                           padding: const EdgeInsets.all(8),
@@ -137,21 +144,24 @@ class History extends StatelessWidget {
                                               children: [
                                                 RichText(
                                                     text: TextSpan(children: [
-                                                  const WidgetSpan(
+                                                  WidgetSpan(
                                                       alignment:
                                                           PlaceholderAlignment
                                                               .middle,
                                                       child: Icon(
                                                         Icons.check,
-                                                        color: Colors.green,
+                                                        color: theme.colorScheme
+                                                            .primaryContainer,
                                                         size: 16,
                                                       )),
                                                   TextSpan(
                                                       text: line.sender,
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
+                                                      style: TextStyle(
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurface,
                                                           fontSize: 16)),
-                                                  const WidgetSpan(
+                                                  WidgetSpan(
                                                       alignment:
                                                           PlaceholderAlignment
                                                               .middle,
@@ -159,11 +169,15 @@ class History extends StatelessWidget {
                                                         Icons
                                                             .arrow_right_alt_rounded,
                                                         size: 28,
+                                                        color: theme.colorScheme
+                                                            .onSurface,
                                                       )),
                                                   TextSpan(
                                                       text: line.recipient,
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
+                                                      style: TextStyle(
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurface,
                                                           fontSize: 16))
                                                 ])),
                                                 Expanded(
@@ -205,12 +219,13 @@ class History extends StatelessWidget {
               width: 40,
               height: 6,
               decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
+                  color: theme.colorScheme.tertiary,
                   borderRadius: const BorderRadius.all(Radius.circular(4))),
             ))
       ]),
       Padding(
-          padding: const EdgeInsets.only(top: 12, bottom: 12, left: 20, right: 20),
+          padding:
+              const EdgeInsets.only(top: 12, bottom: 12, left: 20, right: 20),
           child: Expanded(
               child: Text(
             line.reason,
