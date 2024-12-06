@@ -133,7 +133,7 @@ class UserRanking extends StatelessWidget {
                                                   ? Colors.transparent
                                                   : theme.colorScheme
                                                       .tertiaryContainer,
-                                              width: 0.4),
+                                              width: 0.2),
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(24)),
                                           boxShadow: [
