@@ -19,12 +19,14 @@ class UserRanking extends StatelessWidget {
     var theme = Theme.of(Get.context!);
 
     if (controller.isLoading.value) {
-      return const Scaffold(
+      return Scaffold(
         body: Column(
           children: [
             Expanded(
                 child: Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: theme.colorScheme.tertiaryContainer,
+              ),
             ))
           ],
         ),
@@ -36,8 +38,8 @@ class UserRanking extends StatelessWidget {
         children: [
           Expanded(
               child: RefreshIndicator(
-                  color: Colors.white,
-                  backgroundColor: theme.colorScheme.primary,
+                  color: theme.colorScheme.onInverseSurface,
+                  backgroundColor: theme.colorScheme.tertiary,
                   onRefresh: () async {
                     return controller.refreshRankingList();
                   },
@@ -56,24 +58,25 @@ class UserRanking extends StatelessWidget {
                                     Icon(
                                       FontAwesomeIcons.medal,
                                       size: 120,
-                                      color: theme.colorScheme.primary,
+                                      color:
+                                          theme.colorScheme.tertiaryContainer,
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 8),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8),
                                       child: Text(
                                         "Aucun grand gagnant,",
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color: theme.colorScheme.onSurface,
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 4),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
                                       child: Text(
                                         "le classement est vide...",
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color: theme.colorScheme.onSurface,
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500),
                                       ),
@@ -111,28 +114,34 @@ class UserRanking extends StatelessWidget {
                                       return Colors.brown[700];
                                     }
 
-                                    return Colors.white;
+                                    return theme.colorScheme.onInverseSurface;
                                   }
 
                                   rankingTextColor(int index) {
                                     if ([0, 1, 2].contains(index)) {
-                                      return Colors.white;
+                                      return const Color(0xFFfafcf1);
                                     }
 
-                                    return Colors.black;
+                                    return theme.colorScheme.onSurface;
                                   }
 
                                   return Container(
                                       decoration: BoxDecoration(
                                           color: rankingColor(index),
+                                          border: Border.all(
+                                              color: [0, 1, 2].contains(index)
+                                                  ? Colors.transparent
+                                                  : theme.colorScheme
+                                                      .tertiaryContainer,
+                                              width: 0.4),
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(24)),
-                                          boxShadow: const [
+                                          boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black54,
+                                              color: theme.colorScheme.shadow,
                                               blurRadius: 20.0,
                                               spreadRadius: -20.0,
-                                              offset: Offset(0.0, 25.0),
+                                              offset: const Offset(0.0, 25.0),
                                             )
                                           ]),
                                       height: 48,
@@ -145,7 +154,7 @@ class UserRanking extends StatelessWidget {
                                             children: [
                                               CircleAvatar(
                                                 backgroundColor:
-                                                    theme.colorScheme.primary,
+                                                    theme.colorScheme.surface,
                                                 radius: 20,
                                                 backgroundImage:
                                                     NetworkImage(user.avatar),
@@ -177,9 +186,23 @@ class UserRanking extends StatelessWidget {
 
   Widget podiumHeader(List ranking, theme) {
     return Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.secondary,
-          borderRadius: const BorderRadius.only(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: <Color>[
+                Color(0xFF48C6A9),
+                Color(0xFF529FCB),
+                Color(0xFFF36D6C),
+                Color(0xFFF8AE35),
+              ],
+              stops: <double>[
+                0.0,
+                4.3,
+                7.6,
+                1.0
+              ]),
+          borderRadius: BorderRadius.only(
               bottomLeft: Radius.elliptical(64, 64),
               bottomRight: Radius.elliptical(64, 64)),
         ),
@@ -191,18 +214,19 @@ class UserRanking extends StatelessWidget {
                 children: [
                   Transform.scale(
                     scale: 0.75,
-                    child:
-                        podiumElement(2, Colors.grey[400], ranking[1].avatar),
+                    child: podiumElement(
+                        2, Colors.grey[400], ranking[1].avatar, theme),
                   ),
-                  podiumElement(1, Colors.yellow[700], ranking[0].avatar),
+                  podiumElement(
+                      1, Colors.yellow[700], ranking[0].avatar, theme),
                   Transform.scale(
                       scale: 0.65,
                       child: podiumElement(
-                          3, Colors.brown[700], ranking[2].avatar))
+                          3, Colors.brown[700], ranking[2].avatar, theme))
                 ])));
   }
 
-  Widget podiumElement(int rank, color, String image) {
+  Widget podiumElement(int rank, color, String image, theme) {
     return SizedBox(
       height: 150,
       width: 110,
@@ -214,7 +238,7 @@ class UserRanking extends StatelessWidget {
                 backgroundColor: color,
                 radius: 55,
                 child: CircleAvatar(
-                    backgroundColor: Colors.green,
+                    backgroundColor: theme.colorScheme.surface,
                     radius: 50,
                     backgroundImage: NetworkImage(image)),
               )),
@@ -226,7 +250,7 @@ class UserRanking extends StatelessWidget {
                 radius: 12,
                 child: Text(
                   rank.toString(),
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Color(0xFFfafcf1)),
                 )),
           ),
         ],
