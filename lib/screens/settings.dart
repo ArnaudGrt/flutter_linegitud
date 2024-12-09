@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:linegitud/controllers/settings.dart';
 import 'package:linegitud/routes/router.dart';
@@ -12,6 +13,15 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+
+    final WidgetStateProperty<Icon?> switchIcon =
+        WidgetStateProperty.resolveWith<Icon?>((Set<WidgetState> states) {
+      if (states.contains(WidgetState.selected)) {
+        return const Icon(Icons.check);
+      }
+
+      return const Icon(Icons.close);
+    });
 
     return PopScope(
         key: popKey,
@@ -31,6 +41,7 @@ class Settings extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.w500)),
                 leading: IconButton(
+                  highlightColor: theme.colorScheme.onTertiary,
                   icon: const Icon(Icons.arrow_back_rounded),
                   tooltip: "Retour",
                   onPressed: () {
@@ -60,49 +71,73 @@ class Settings extends StatelessWidget {
                       height: 4.0,
                     ))),
             body: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.only(
+                    left: 32, right: 32, top: 16, bottom: 16),
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 75,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Thème sombre"),
-                              Obx(() => Switch(
-                                  value: controller.isDarkMode.value,
-                                  onChanged: (bool value) {
-                                    controller.toggleThemeMode(value);
-                                  }))
-                            ],
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(100)),
+                                border: Border.all(
+                                    color: theme.colorScheme.inverseSurface)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Icon(FontAwesomeIcons.moon,
+                                  size: 16,
+                                  color: theme.colorScheme.inverseSurface),
+                            ),
+                          ),
+                          const Text("Dark Mode"),
+                          Obx(() => Switch(
+                              activeColor: theme.colorScheme.tertiary,
+                              thumbIcon: switchIcon,
+                              value: controller.isDarkMode.value,
+                              onChanged: (bool value) {
+                                controller.toggleThemeMode(value);
+                              }))
+                        ]),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12, bottom: 24),
+                          child: Text(
+                            "Utilisateurs",
+                            style: TextStyle(
+                                color: theme.colorScheme.inverseSurface,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    const SizedBox(
-                      height: 75,
-                      child: Card(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 8, right: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Utilisateurs"),
-                              Icon(
-                                Icons.arrow_forward_rounded,
-                                size: 32,
-                              )
-                            ],
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(100)),
+                                border: Border.all(
+                                    color: theme.colorScheme.inverseSurface)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Icon(FontAwesomeIcons.user,
+                                  size: 16,
+                                  color: theme.colorScheme.inverseSurface),
+                            ),
                           ),
-                        ),
-                      ),
-                    )
+                          const Text("Gestion"),
+                          Flexible(
+                            child: Icon(FontAwesomeIcons.angleRight,
+                                size: 16,
+                                color: theme.colorScheme.inverseSurface),
+                          )
+                        ]),
                   ],
                 ))));
   }
