@@ -330,6 +330,8 @@ class NewLine extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8, bottom: 8),
             child: ElevatedButton.icon(
                 style: ButtonStyle(
+                    overlayColor: WidgetStatePropertyAll<Color>(
+                        theme.colorScheme.surfaceContainerHighest),
                     backgroundColor: WidgetStatePropertyAll<Color>(
                         theme.colorScheme.onInverseSurface)),
                 onPressed: () {
@@ -343,6 +345,8 @@ class NewLine extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8, bottom: 8),
             child: FilledButton.icon(
               style: ButtonStyle(
+                  overlayColor: WidgetStatePropertyAll<Color>(
+                      theme.colorScheme.tertiaryContainer),
                   backgroundColor: WidgetStatePropertyAll<Color>(
                       theme.colorScheme.tertiary)),
               onPressed: () async {
@@ -350,12 +354,12 @@ class NewLine extends StatelessWidget {
                   final result = await controller.createLine();
 
                   if (result.success) {
-                    Get.dialog(successDialog(result.success, null),
+                    Get.dialog(successDialog(result.success, null, theme),
                         barrierDismissible: false);
                     return;
                   }
 
-                  Get.dialog(successDialog(result.success, result.error),
+                  Get.dialog(successDialog(result.success, result.error, theme),
                       barrierDismissible: false);
                   return;
                 }
@@ -386,32 +390,40 @@ class NewLine extends StatelessWidget {
     );
   }
 
-  Widget successDialog(bool success, String? errorText) {
+  Widget successDialog(bool success, String? errorText, theme) {
     return AlertDialog(
+        contentPadding: const EdgeInsets.only(top: 16, left: 12, right: 12),
+        backgroundColor: theme.colorScheme.onInverseSurface,
         icon: success
-            ? const Icon(FontAwesomeIcons.circleCheck,
-                color: Colors.lime, size: 48)
-            : const Icon(FontAwesomeIcons.circleExclamation,
-                color: Colors.red, size: 48),
+            ? Icon(FontAwesomeIcons.circleCheck,
+                color: theme.colorScheme.primaryContainer, size: 48)
+            : Icon(FontAwesomeIcons.circleExclamation,
+                color: theme.colorScheme.errorContainer, size: 48),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
                 child: success
-                    ? const Text(
+                    ? Text(
                         "Le trait a correctement été ajouté à la personne concernée !",
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(
+                            fontSize: 14, color: theme.colorScheme.onSurface),
                         textAlign: TextAlign.center,
                       )
                     : Text(
                         errorText ?? "",
-                        style: const TextStyle(fontSize: 14),
+                        style: TextStyle(
+                            fontSize: 14, color: theme.colorScheme.onSurface),
                         textAlign: TextAlign.center,
                       ))
           ],
         ),
         actions: [
           TextButton(
+            style: ButtonStyle(
+              overlayColor: WidgetStatePropertyAll<Color>(
+                  theme.colorScheme.surfaceContainerHighest),
+            ),
             onPressed: () {
               Get.back();
 
@@ -419,7 +431,10 @@ class NewLine extends StatelessWidget {
                 homeController.selectMenu(0);
               }
             },
-            child: const Text('Fermer'),
+            child: Text(
+              'Fermer',
+              style: TextStyle(color: theme.colorScheme.onSurface),
+            ),
           ),
         ],
         actionsPadding: const EdgeInsets.only(bottom: 4, right: 12));
