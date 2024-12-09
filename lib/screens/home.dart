@@ -27,6 +27,7 @@ class Home extends StatelessWidget {
             actions: <Widget>[
               Obx(() => controller.selectedIndex.value == 0
                   ? IconButton(
+                      highlightColor: theme.colorScheme.onTertiary,
                       icon: Icon(
                         FontAwesomeIcons.gear,
                         color: theme.colorScheme.tertiaryContainer,
