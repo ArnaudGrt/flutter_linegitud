@@ -75,31 +75,33 @@ class Settings extends StatelessWidget {
                     left: 32, right: 32, top: 16, bottom: 16),
                 child: Column(
                   children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(100)),
-                                border: Border.all(
-                                    color: theme.colorScheme.inverseSurface)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Icon(FontAwesomeIcons.moon,
-                                  size: 16,
-                                  color: theme.colorScheme.inverseSurface),
-                            ),
-                          ),
-                          const Text("Dark Mode"),
-                          Obx(() => Switch(
-                              activeColor: theme.colorScheme.tertiary,
-                              thumbIcon: switchIcon,
-                              value: controller.isDarkMode.value,
-                              onChanged: (bool value) {
-                                controller.toggleThemeMode(value);
-                              }))
-                        ]),
+                    Row(children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(100)),
+                            border: Border.all(
+                                color: theme.colorScheme.inverseSurface)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Icon(FontAwesomeIcons.moon,
+                              size: 16,
+                              color: theme.colorScheme.inverseSurface),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 24,
+                      ),
+                      const Text("Dark Mode"),
+                      const Spacer(),
+                      Obx(() => Switch(
+                          activeColor: theme.colorScheme.tertiary,
+                          thumbIcon: switchIcon,
+                          value: controller.isDarkMode.value,
+                          onChanged: (bool value) {
+                            controller.toggleThemeMode(value);
+                          }))
+                    ]),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -115,29 +117,38 @@ class Settings extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(100)),
-                                border: Border.all(
-                                    color: theme.colorScheme.inverseSurface)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Icon(FontAwesomeIcons.user,
-                                  size: 16,
-                                  color: theme.colorScheme.inverseSurface),
+                    InkWell(
+                      overlayColor: WidgetStatePropertyAll<Color>(
+                          theme.colorScheme.surface),
+                      onTap: () {
+                        Get.toNamed(AppRoutes.users);
+                      },
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(100)),
+                                  border: Border.all(
+                                      color: theme.colorScheme.inverseSurface)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Icon(FontAwesomeIcons.user,
+                                    size: 16,
+                                    color: theme.colorScheme.inverseSurface),
+                              ),
                             ),
-                          ),
-                          const Text("Gestion"),
-                          Flexible(
-                            child: Icon(FontAwesomeIcons.angleRight,
+                            const SizedBox(
+                              width: 24,
+                            ),
+                            const Text("Gestion"),
+                            const Spacer(),
+                            Icon(FontAwesomeIcons.angleRight,
                                 size: 16,
                                 color: theme.colorScheme.inverseSurface),
-                          )
-                        ]),
+                          ]),
+                    )
                   ],
                 ))));
   }
