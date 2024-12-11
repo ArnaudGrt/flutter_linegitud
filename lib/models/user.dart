@@ -24,12 +24,14 @@ class User {
 }
 
 class CleanUser {
+  int? id;
   String name;
   String avatar;
 
   CleanUser({
+    this.id,
     required this.name,
-    required this.avatar
+    required this.avatar,
   });
 }
 
