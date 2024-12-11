@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:linegitud/controllers/users.dart';
+import 'package:linegitud/utils/options.dart';
 
 class Users extends StatelessWidget {
   Users({super.key});
@@ -70,6 +71,7 @@ class Users extends StatelessWidget {
 
   Widget searchUser(context) {
     var theme = Theme.of(context);
+    Rx<Options<bool>> searchResultValue = Rx(Options<bool>());
 
     return Form(
       key: controller.searchFormKey,
@@ -91,10 +93,12 @@ class Users extends StatelessWidget {
                 onTapOutside: (event) {
                   return FocusScope.of(context).unfocus();
                 },
-                onChanged: (value) {},
+                onChanged: (value) {
+                  controller.userSearchValue.value = value;
+                },
                 validator: (value) {
                   if (value == "" || value == null) {
-                    return 'Une raison VALABLE doit être renseignée !';
+                    return 'Une valeur doit être renseignée...';
                   }
 
                   return null;
@@ -128,7 +132,14 @@ class Users extends StatelessWidget {
                             color: theme.colorScheme.tertiaryContainer,
                             width: 0.4)),
                     suffixIcon: IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (controller.searchFormKey.currentState!
+                              .validate()) {
+                            final result = await controller.searchUser();
+                            searchResultValue.value.setSome(result.success);
+                            searchResultValue.refresh();
+                          }
+                        },
                         icon: Icon(
                           FontAwesomeIcons.magnifyingGlass,
                           size: 18,
@@ -137,49 +148,60 @@ class Users extends StatelessWidget {
               )),
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "L'utilisateur recherché a bien été trouvé !",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: theme.colorScheme.primaryContainer),
-                ),
-                // Text(
-                //   "L'utilisateur recherché n'a pas été trouvé...",
-                //   textAlign: TextAlign.center,
-                //   style: TextStyle(color: theme.colorScheme.error),
-                // ),
-              ],
-            ),
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Obx(() => searchResultValue.value.match(
+                  onNone: () => const SizedBox.shrink(),
+                  onLoading: () => const SizedBox.shrink(),
+                  onSome: (value) {
+                    return value
+                        ? Text(
+                            "L'utilisateur recherché a bien été trouvé !",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: theme.colorScheme.primaryContainer),
+                          )
+                        : Text(
+                            "L'utilisateur recherché n'a pas été trouvé...",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: theme.colorScheme.error),
+                          );
+                  }))
+            ]),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton.icon(
-                  style: ButtonStyle(
-                      overlayColor: WidgetStatePropertyAll<Color>(
-                          theme.colorScheme.tertiaryContainer),
-                      backgroundColor: WidgetStatePropertyAll<Color>(
-                          theme.colorScheme.tertiary)),
-                  onPressed: () {},
-                  label: Text(
-                    "Modifier",
-                    style: TextStyle(color: theme.colorScheme.onInverseSurface),
-                  )),
-              ElevatedButton.icon(
-                  style: ButtonStyle(
-                      overlayColor: WidgetStatePropertyAll<Color>(
-                          theme.colorScheme.error),
-                      backgroundColor: WidgetStatePropertyAll<Color>(
-                          theme.colorScheme.errorContainer)),
-                  onPressed: () {},
-                  label: Text(
-                    "Supprimer",
-                    style: TextStyle(color: theme.colorScheme.onInverseSurface),
-                  )),
-            ],
-          ),
+          Obx(() => searchResultValue.value.match(
+              onLoading: () => const SizedBox.shrink(),
+              onNone: () => const SizedBox.shrink(),
+              onSome: (value) => value
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton.icon(
+                            style: ButtonStyle(
+                                overlayColor: WidgetStatePropertyAll<Color>(
+                                    theme.colorScheme.tertiaryContainer),
+                                backgroundColor: WidgetStatePropertyAll<Color>(
+                                    theme.colorScheme.tertiary)),
+                            onPressed: () {},
+                            label: Text(
+                              "Modifier",
+                              style: TextStyle(
+                                  color: theme.colorScheme.onInverseSurface),
+                            )),
+                        ElevatedButton.icon(
+                            style: ButtonStyle(
+                                overlayColor: WidgetStatePropertyAll<Color>(
+                                    theme.colorScheme.error),
+                                backgroundColor: WidgetStatePropertyAll<Color>(
+                                    theme.colorScheme.errorContainer)),
+                            onPressed: () {},
+                            label: Text(
+                              "Supprimer",
+                              style: TextStyle(
+                                  color: theme.colorScheme.onInverseSurface),
+                            )),
+                      ],
+                    )
+                  : const SizedBox.shrink()))
         ],
       ),
     );
@@ -211,7 +233,7 @@ class Users extends StatelessWidget {
                 onChanged: (value) {},
                 validator: (value) {
                   if (value == "" || value == null) {
-                    return 'Une raison VALABLE doit être renseignée !';
+                    return 'Un nom doit être renseigné !';
                   }
 
                   return null;
@@ -259,7 +281,7 @@ class Users extends StatelessWidget {
                 onChanged: (value) {},
                 validator: (value) {
                   if (value == "" || value == null) {
-                    return 'Une raison VALABLE doit être renseignée !';
+                    return 'Un avatar doit être renseignée !';
                   }
 
                   return null;
