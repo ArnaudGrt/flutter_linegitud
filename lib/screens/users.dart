@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:linegitud/controllers/users.dart';
+import 'package:linegitud/models/user.dart';
 import 'package:linegitud/utils/options.dart';
 
 class Users extends StatelessWidget {
@@ -193,7 +194,9 @@ class Users extends StatelessWidget {
                                     theme.colorScheme.error),
                                 backgroundColor: WidgetStatePropertyAll<Color>(
                                     theme.colorScheme.errorContainer)),
-                            onPressed: () {},
+                            onPressed: () {
+
+                            },
                             label: Text(
                               "Supprimer",
                               style: TextStyle(
@@ -367,5 +370,44 @@ class Users extends StatelessWidget {
             )),
       ],
     );
+  }
+
+  Widget successDialog(theme, CleanUser user) {
+    final dialogText =
+        "Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.name}";
+
+    return AlertDialog(
+        contentPadding: const EdgeInsets.only(top: 16, left: 12, right: 12),
+        backgroundColor: theme.colorScheme.onInverseSurface,
+        icon: Icon(FontAwesomeIcons.circleQuestion,
+            color: theme.colorScheme.primaryContainer, size: 48),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+                child: Text(
+              dialogText,
+              style:
+                  TextStyle(fontSize: 14, color: theme.colorScheme.onSurface),
+              textAlign: TextAlign.center,
+            ))
+          ],
+        ),
+        actions: [
+          TextButton(
+            style: ButtonStyle(
+              overlayColor: WidgetStatePropertyAll<Color>(
+                  theme.colorScheme.surfaceContainerHighest),
+            ),
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              'Fermer',
+              style: TextStyle(color: theme.colorScheme.onSurface),
+            ),
+          ),
+        ],
+        actionsPadding: const EdgeInsets.only(bottom: 4, right: 12));
   }
 }

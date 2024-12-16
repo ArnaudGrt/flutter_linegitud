@@ -7,12 +7,13 @@ import 'package:linegitud/models/user.dart';
 class UsersController extends GetxController {
   final DataBaseController dbController = Get.find();
 
+  // Search Form
+  final searchFormKey = GlobalKey<FormState>();
   final userSearchValue = "".obs;
+  // User Form
+  final userFormKey = GlobalKey<FormState>();
   final userName = "".obs;
   final userAvatar = "".obs;
-
-  final searchFormKey = GlobalKey<FormState>();
-  final userFormKey = GlobalKey<FormState>();
 
   Future<DbResult> searchUser() async {
     final formattedUserValue = userSearchValue.value.capitalizeFirst;
