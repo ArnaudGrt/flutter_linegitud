@@ -64,7 +64,7 @@ class NewLineController extends GetxController {
     return LineList(lineList: linesArray);
   }
 
-  Future<DbResult> createLine() async {
+  Future createLine() async {
     toggleLoader(true);
 
     final lines = await fetchLines();
@@ -83,7 +83,7 @@ class NewLineController extends GetxController {
     toggleLoader(false);
 
     if(res == nextId){
-      return DbResult(success: true, id: res);
+      return DbResultId(success: true, id: res);
     }
 
     return DbResult(success: false, error: "Tout ne s'est pas passé correctement... Il y eu un problème lors de l'ajout du trait...");
