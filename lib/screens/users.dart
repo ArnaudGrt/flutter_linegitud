@@ -73,6 +73,7 @@ class Users extends StatelessWidget {
   Widget searchUser(context) {
     var theme = Theme.of(context);
     Rx<Options<bool>> searchResultValue = Rx(Options<bool>());
+    Rx<CleanUser> searchResultUser = Rx(CleanUser(name: "", avatar: ""));
 
     return Form(
       key: controller.searchFormKey,
@@ -139,6 +140,13 @@ class Users extends StatelessWidget {
                             final result = await controller.searchUser();
                             searchResultValue.value.setSome(result.success);
                             searchResultValue.refresh();
+
+                            if (result.success) {
+                              searchResultUser.value = result.user;
+                            } else {
+                              searchResultUser.value =
+                                  CleanUser(name: "", avatar: "");
+                            }
                           }
                         },
                         icon: Icon(
@@ -156,13 +164,13 @@ class Users extends StatelessWidget {
                   onSome: (value) {
                     return value
                         ? Text(
-                            "L'utilisateur recherché a bien été trouvé !",
+                            "1 utilisateur a été trouvé !",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: theme.colorScheme.primaryContainer),
                           )
                         : Text(
-                            "L'utilisateur recherché n'a pas été trouvé...",
+                            "Aucun utilisateur n'a été trouvé...",
                             textAlign: TextAlign.center,
                             style: TextStyle(color: theme.colorScheme.error),
                           );
@@ -195,7 +203,13 @@ class Users extends StatelessWidget {
                                 backgroundColor: WidgetStatePropertyAll<Color>(
                                     theme.colorScheme.errorContainer)),
                             onPressed: () {
-
+                              // @Arnaud : bug when close dialog and click on the button
+                              // have to click 2 times
+                              if (searchResultUser.value.name != "") {
+                                Get.dialog(
+                                    successDialog(theme, searchResultUser),
+                                    barrierDismissible: false);
+                              }
                             },
                             label: Text(
                               "Supprimer",
@@ -372,9 +386,9 @@ class Users extends StatelessWidget {
     );
   }
 
-  Widget successDialog(theme, CleanUser user) {
+  Widget successDialog(theme, Rx<CleanUser> user) {
     final dialogText =
-        "Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.name}";
+        "Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.value.name}";
 
     return AlertDialog(
         contentPadding: const EdgeInsets.only(top: 16, left: 12, right: 12),
@@ -399,12 +413,27 @@ class Users extends StatelessWidget {
               overlayColor: WidgetStatePropertyAll<Color>(
                   theme.colorScheme.surfaceContainerHighest),
             ),
+            onPressed: () async {
+              final result = await controller.deleteUser(user.value.name);
+
+              // @Arnaud TODO : manage the result of the query
+            },
+            child: Text(
+              'Oui',
+              style: TextStyle(color: theme.colorScheme.tertiary),
+            ),
+          ),
+          TextButton(
+            style: ButtonStyle(
+              overlayColor: WidgetStatePropertyAll<Color>(
+                  theme.colorScheme.surfaceContainerHighest),
+            ),
             onPressed: () {
               Get.back();
             },
             child: Text(
-              'Fermer',
-              style: TextStyle(color: theme.colorScheme.onSurface),
+              'Non',
+              style: TextStyle(color: theme.colorScheme.errorContainer),
             ),
           ),
         ],
