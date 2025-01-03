@@ -12,10 +12,14 @@ class UsersController extends GetxController {
   // Search Form
   final searchFormKey = GlobalKey<FormState>();
   final userSearchValue = "".obs;
+
+  Rx<Options<bool>> searchResultValue = Rx(Options<bool>());
+  Rx<CleanUser> searchResultUser = Rx(CleanUser(name: "", avatar: ""));
   // User Form
   final userFormKey = GlobalKey<FormState>();
   final userName = "".obs;
   final userAvatar = "".obs;
+  
   Rx<Options<DbResult>> newUserResult = Rx(Options<DbResult>());
 
   Future searchUser() async {
