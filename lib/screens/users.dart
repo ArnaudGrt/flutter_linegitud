@@ -73,8 +73,6 @@ class Users extends StatelessWidget {
 
   Widget searchUser(context) {
     var theme = Theme.of(context);
-    Rx<Options<bool>> searchResultValue = Rx(Options<bool>());
-    Rx<CleanUser> searchResultUser = Rx(CleanUser(name: "", avatar: ""));
 
     return Form(
       key: controller.searchFormKey,
@@ -139,13 +137,13 @@ class Users extends StatelessWidget {
                           if (controller.searchFormKey.currentState!
                               .validate()) {
                             final result = await controller.searchUser();
-                            searchResultValue.value.setSome(result.success);
-                            searchResultValue.refresh();
+                            controller.searchResultValue.value.setSome(result.success);
+                            controller.searchResultValue.refresh();
 
                             if (result.success) {
-                              searchResultUser.value = result.user;
+                              controller.searchResultUser.value = result.user;
                             } else {
-                              searchResultUser.value =
+                              controller.searchResultUser.value =
                                   CleanUser(name: "", avatar: "");
                             }
                           }
@@ -159,7 +157,7 @@ class Users extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Obx(() => searchResultValue.value.match(
+              Obx(() => controller.searchResultValue.value.match(
                   onNone: () => const SizedBox.shrink(),
                   onLoading: () => const SizedBox.shrink(),
                   onSome: (value) {
@@ -178,7 +176,7 @@ class Users extends StatelessWidget {
                   }))
             ]),
           ),
-          Obx(() => searchResultValue.value.match(
+          Obx(() => controller.searchResultValue.value.match(
               onLoading: () => const SizedBox.shrink(),
               onNone: () => const SizedBox.shrink(),
               onSome: (value) => value
@@ -206,9 +204,9 @@ class Users extends StatelessWidget {
                             onPressed: () {
                               // @Arnaud : bug when close dialog and click on the button
                               // have to click 2 times
-                              if (searchResultUser.value.name != "") {
+                              if (controller.searchResultUser.value.name != "") {
                                 Get.dialog(
-                                    successDialog(theme, searchResultUser),
+                                    successDialog(theme),
                                     barrierDismissible: false);
                               }
                             },
@@ -408,15 +406,15 @@ class Users extends StatelessWidget {
     );
   }
 
-  Widget successDialog(theme, Rx<CleanUser> user) {
+  Widget successDialog(theme) {
     final dialogText =
-        "Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.value.name}";
+        "Êtes-vous sûr de vouloir supprimer l'utilisateur ${controller.searchResultUser.value.name} ?";
 
     return AlertDialog(
         contentPadding: const EdgeInsets.only(top: 16, left: 12, right: 12),
         backgroundColor: theme.colorScheme.onInverseSurface,
         icon: Icon(FontAwesomeIcons.circleQuestion,
-            color: theme.colorScheme.primaryContainer, size: 48),
+            color: theme.colorScheme.tertiary, size: 48),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -436,13 +434,13 @@ class Users extends StatelessWidget {
                   theme.colorScheme.surfaceContainerHighest),
             ),
             onPressed: () async {
-              final result = await controller.deleteUser(user.value.name);
+              final result = await controller.deleteUser(controller.searchResultUser.value.name);
 
               // @Arnaud TODO : manage the result of the query
             },
             child: Text(
               'Oui',
-              style: TextStyle(color: theme.colorScheme.tertiary),
+              style: TextStyle(color: theme.colorScheme.primaryContainer),
             ),
           ),
           TextButton(
