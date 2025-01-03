@@ -68,6 +68,7 @@ class NewLineController extends GetxController {
     toggleLoader(true);
 
     final lines = await fetchLines();
+    // @Arnaud : if one day it is possible to delete a line, change lineCount with a MAX() SQL QUERY
     final linesCount = lines.linesLength();
     final nextId = linesCount + 1;
     final createdAt = DateFormat("y-MM-dd HH:mm:ss").format(DateTime.now());
