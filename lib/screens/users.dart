@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:linegitud/controllers/users.dart';
+import 'package:linegitud/models/db.dart';
 import 'package:linegitud/models/user.dart';
 import 'package:linegitud/utils/options.dart';
 
@@ -247,7 +248,9 @@ class Users extends StatelessWidget {
                 onTapOutside: (event) {
                   return FocusScope.of(context).unfocus();
                 },
-                onChanged: (value) {},
+                onChanged: (value) {
+                  controller.userName.value = value;
+                },
                 validator: (value) {
                   if (value == "" || value == null) {
                     return 'Un nom doit être renseigné !';
@@ -295,10 +298,12 @@ class Users extends StatelessWidget {
                 onTapOutside: (event) {
                   return FocusScope.of(context).unfocus();
                 },
-                onChanged: (value) {},
+                onChanged: (value) {
+                  controller.userAvatar.value = value;
+                },
                 validator: (value) {
                   if (value == "" || value == null) {
-                    return 'Un avatar doit être renseignée !';
+                    return 'Un avatar doit être renseigné !';
                   }
 
                   return null;
@@ -306,7 +311,7 @@ class Users extends StatelessWidget {
                 style: TextStyle(color: theme.colorScheme.onSurface),
                 cursorColor: theme.colorScheme.tertiaryContainer,
                 decoration: InputDecoration(
-                    hintText: "Avatar",
+                    hintText: "URL de l'avatar",
                     hintStyle:
                         TextStyle(color: theme.colorScheme.inverseSurface),
                     filled: true,
@@ -337,7 +342,17 @@ class Users extends StatelessWidget {
                             color: theme.colorScheme.tertiaryContainer,
                             width: 0.4))),
               )),
-          userFormSubmit(theme)
+          userFormSubmit(theme),
+          Obx(() => controller.newUserResult.value.match(
+              onNone: () => const SizedBox.shrink(),
+              onLoading: () => const SizedBox.shrink(),
+              onSome: (value) {
+                return value.success
+                    ? successText(
+                        theme, true, "L'utilisateur a été créé avec succès !")
+                    : successText(theme, false,
+                        value.error ?? "L'utilisateur n'a pas pu être créé...");
+              }))
         ],
       ),
     );
@@ -357,6 +372,7 @@ class Users extends StatelessWidget {
                         theme.colorScheme.onInverseSurface)),
                 onPressed: () {
                   controller.userFormKey.currentState!.reset();
+                  controller.newUserResult.value = Options<DbResult>();
                 },
                 label: Text(
                   "Réinitialiser",
@@ -370,7 +386,13 @@ class Users extends StatelessWidget {
                       theme.colorScheme.tertiaryContainer),
                   backgroundColor: WidgetStatePropertyAll<Color>(
                       theme.colorScheme.tertiary)),
-              onPressed: () async {},
+              onPressed: () async {
+                if (controller.userFormKey.currentState!.validate()) {
+                  final result = await controller.createUser();
+                  controller.newUserResult.value.setSome(result);
+                  controller.newUserResult.refresh();
+                }
+              },
               label: Text(
                 "Enregistrer",
                 style: TextStyle(color: theme.colorScheme.onInverseSurface),
@@ -438,5 +460,27 @@ class Users extends StatelessWidget {
           ),
         ],
         actionsPadding: const EdgeInsets.only(bottom: 4, right: 12));
+  }
+
+  Widget successText(theme, bool success, String text) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+            padding: const EdgeInsets.all(8),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: success
+                      ? theme.colorScheme.primaryContainer
+                      : theme.colorScheme.errorContainer),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(text,
+                    style: TextStyle(color: theme.colorScheme.onSurface)),
+              ),
+            ))
+      ],
+    );
   }
 }
