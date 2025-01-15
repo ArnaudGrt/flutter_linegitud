@@ -136,8 +136,12 @@ class Users extends StatelessWidget {
                         onPressed: () async {
                           if (controller.searchFormKey.currentState!
                               .validate()) {
+                            controller.deleteUserResult.value =
+                                Options<DbResult>();
+
                             final result = await controller.searchUser();
-                            controller.searchResultValue.value.setSome(result.success);
+                            controller.searchResultValue.value
+                                .setSome(result.success);
                             controller.searchResultValue.refresh();
 
                             if (result.success) {
@@ -202,11 +206,9 @@ class Users extends StatelessWidget {
                                 backgroundColor: WidgetStatePropertyAll<Color>(
                                     theme.colorScheme.errorContainer)),
                             onPressed: () {
-                              // @Arnaud : bug when close dialog and click on the button
-                              // have to click 2 times
-                              if (controller.searchResultUser.value.name != "") {
-                                Get.dialog(
-                                    successDialog(theme),
+                              if (controller.searchResultUser.value.name !=
+                                  "") {
+                                Get.dialog(deleteDialog(theme),
                                     barrierDismissible: false);
                               }
                             },
@@ -217,7 +219,20 @@ class Users extends StatelessWidget {
                             )),
                       ],
                     )
-                  : const SizedBox.shrink()))
+                  : const SizedBox.shrink())),
+          Obx(() => controller.deleteUserResult.value.match(
+              onNone: () => const SizedBox.shrink(),
+              onLoading: () => const SizedBox.shrink(),
+              onSome: (value) {
+                return value.success
+                    ? resultDisplay(theme, true,
+                        "L'utilisateur a été supprimé avec succès !")
+                    : resultDisplay(
+                        theme,
+                        false,
+                        value.error ??
+                            "L'utilisateur n'a pas pu être supprimé...");
+              }))
         ],
       ),
     );
@@ -346,11 +361,11 @@ class Users extends StatelessWidget {
               onLoading: () => const SizedBox.shrink(),
               onSome: (value) {
                 return value.success
-                    ? successText(
+                    ? resultDisplay(
                         theme, true, "L'utilisateur a été créé avec succès !")
-                    : successText(theme, false,
+                    : resultDisplay(theme, false,
                         value.error ?? "L'utilisateur n'a pas pu être créé...");
-              }))
+              })),
         ],
       ),
     );
@@ -406,7 +421,7 @@ class Users extends StatelessWidget {
     );
   }
 
-  Widget successDialog(theme) {
+  Widget deleteDialog(theme) {
     final dialogText =
         "Êtes-vous sûr de vouloir supprimer l'utilisateur ${controller.searchResultUser.value.name} ?";
 
@@ -434,9 +449,18 @@ class Users extends StatelessWidget {
                   theme.colorScheme.surfaceContainerHighest),
             ),
             onPressed: () async {
-              final result = await controller.deleteUser(controller.searchResultUser.value.name);
+              final result = await controller
+                  .deleteUser(controller.searchResultUser.value.name);
 
-              // @Arnaud TODO : manage the result of the query
+              controller.deleteUserResult.value.setSome(result);
+              controller.deleteUserResult.refresh();
+
+              if (result.success) {
+                controller.searchResultValue.value = Options<bool>();
+              }
+
+              Get.back();
+              // TODO : when delete user with a line, History screen is not reload
             },
             child: Text(
               'Oui',
@@ -460,25 +484,35 @@ class Users extends StatelessWidget {
         actionsPadding: const EdgeInsets.only(bottom: 4, right: 12));
   }
 
-  Widget successText(theme, bool success, String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-            padding: const EdgeInsets.all(8),
-            child: Container(
+  Widget resultDisplay(theme, bool success, String text) {
+    return Row(children: [
+      Expanded(
+          child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   color: success
                       ? theme.colorScheme.primaryContainer
                       : theme.colorScheme.errorContainer),
               child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(text,
-                    style: TextStyle(color: theme.colorScheme.onSurface)),
-              ),
-            ))
-      ],
-    );
+                  padding: const EdgeInsets.only(
+                      top: 20, bottom: 20, left: 8, right: 4),
+                  child: RichText(
+                      text: TextSpan(children: [
+                    WidgetSpan(
+                        child: Icon(
+                      success
+                          ? FontAwesomeIcons.circleCheck
+                          : FontAwesomeIcons.triangleExclamation,
+                      size: 16,
+                    )),
+                    const WidgetSpan(
+                        child: SizedBox(
+                      width: 4,
+                    )),
+                    TextSpan(
+                        text: text,
+                        style: TextStyle(color: theme.colorScheme.onSurface))
+                  ]))))),
+    ]);
   }
 }
