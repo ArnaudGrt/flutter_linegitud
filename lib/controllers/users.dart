@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:linegitud/controllers/db.dart';
+import 'package:linegitud/controllers/line.dart';
 import 'package:linegitud/models/db.dart';
 import 'package:linegitud/models/user.dart';
 import 'package:linegitud/utils/options.dart';
@@ -8,6 +9,7 @@ import 'package:sqflite/sqflite.dart';
 
 class UsersController extends GetxController {
   final DataBaseController dbController = Get.find();
+  final LineController lineController = Get.find();
 
   // Search Form
   final searchFormKey = GlobalKey<FormState>();
@@ -15,6 +17,7 @@ class UsersController extends GetxController {
 
   Rx<Options<bool>> searchResultValue = Rx(Options<bool>());
   Rx<CleanUser> searchResultUser = Rx(CleanUser(name: "", avatar: ""));
+  Rx<Options<DbResult>> deleteUserResult = Rx(Options<DbResult>());
   // User Form
   final userFormKey = GlobalKey<FormState>();
   final userName = "".obs;
@@ -43,7 +46,13 @@ class UsersController extends GetxController {
     );
 
     if(userQuery == 1){
-      return DbResult(success: true);
+      final res = await lineController.deleteFromUser(name);
+
+      if(res.success){
+        return DbResult(success: true);
+      }
+
+      return DbResult(success: false, error: res.error ?? "");
     }
 
     return DbResult(success: false, error: "La suppression ne s'est passée comme prévue...");
