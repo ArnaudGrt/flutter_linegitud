@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:linegitud/controllers/db.dart';
 import 'package:linegitud/controllers/history.dart';
 import 'package:linegitud/controllers/home.dart';
+import 'package:linegitud/controllers/line.dart';
 import 'package:linegitud/controllers/new_line.dart';
 import 'package:linegitud/controllers/ranking.dart';
 import 'package:linegitud/controllers/settings.dart';
@@ -18,5 +19,6 @@ class HomeBindings implements Bindings {
     Get.lazyPut(() => HistoryController(), fenix: true);
     Get.lazyPut(() => UserRankingController(), fenix: true);
     Get.lazyPut(() => NewLineController(), fenix: true);
+    Get.lazyPut(() => LineController(), fenix: true);
   }
 }
