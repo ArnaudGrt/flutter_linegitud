@@ -12,6 +12,8 @@ class UsersController extends GetxController {
   final DataBaseController dbController = Get.find();
   final LineController lineController = Get.find();
 
+  final formMode = "create".obs;
+
   // Search Form
   final searchFormKey = GlobalKey<FormState>();
   final userSearchValue = "".obs;

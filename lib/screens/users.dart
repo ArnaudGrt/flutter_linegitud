@@ -193,7 +193,12 @@ class Users extends StatelessWidget {
                                     theme.colorScheme.tertiaryContainer),
                                 backgroundColor: WidgetStatePropertyAll<Color>(
                                     theme.colorScheme.tertiary)),
-                            onPressed: () {},
+                            onPressed: () {
+                              controller.formMode.value = "update";
+                              controller.formMode.refresh();
+                              controller.userName.value = controller.searchResultUser.value.name;
+                              controller.userAvatar.value = controller.searchResultUser.value.avatar;
+                            },
                             label: Text(
                               "Modifier",
                               style: TextStyle(
@@ -246,65 +251,73 @@ class Users extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Nouvel utilisateur",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: theme.colorScheme.inverseSurface,
-                fontWeight: FontWeight.bold,
-                fontSize: 14),
-          ),
+          Obx(() => Text(
+                controller.formMode.value == "create"
+                    ? "Nouvel utilisateur"
+                    : "Mettre un jour un utilisateur",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: theme.colorScheme.inverseSurface,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14),
+              )),
           Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: TextFormField(
-                maxLength: 20,
-                onTapOutside: (event) {
-                  return FocusScope.of(context).unfocus();
-                },
-                onChanged: (value) {
-                  controller.userName.value = value;
-                },
-                validator: (value) {
-                  if (value == "" || value == null) {
-                    return 'Un nom doit être renseigné !';
-                  }
+              child: Obx(() => TextFormField(
+                    readOnly: controller.formMode.value == "update",
+                    maxLength: 20,
+                    onTapOutside: (event) {
+                      return FocusScope.of(context).unfocus();
+                    },
+                    onChanged: (value) {
+                      controller.userName.value = value;
+                    },
+                    validator: (value) {
+                      if (value == "" || value == null) {
+                        return 'Un nom doit être renseigné !';
+                      }
 
-                  return null;
-                },
-                style: TextStyle(color: theme.colorScheme.onSurface),
-                cursorColor: theme.colorScheme.tertiaryContainer,
-                decoration: InputDecoration(
-                    hintText: "Prénom",
-                    hintStyle:
-                        TextStyle(color: theme.colorScheme.inverseSurface),
-                    filled: true,
-                    fillColor: theme.colorScheme.onInverseSurface,
-                    prefixIcon: Icon(FontAwesomeIcons.userPen,
-                        size: 18, color: theme.colorScheme.tertiary),
-                    errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                            color: theme.colorScheme.error, width: 0.4)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                            color: theme.colorScheme.tertiaryContainer,
-                            width: 0.4)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                            color: theme.colorScheme.tertiaryContainer,
-                            width: 0.4)),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                            color: theme.colorScheme.error, width: 0.4)),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                            color: theme.colorScheme.tertiaryContainer,
-                            width: 0.4))),
-              )),
+                      return null;
+                    },
+                    style: TextStyle(color: theme.colorScheme.onSurface),
+                    cursorColor: theme.colorScheme.tertiaryContainer,
+                    decoration: InputDecoration(
+                        hintText: "Prénom",
+                        hintStyle: TextStyle(
+                            color: controller.formMode.value == "create"
+                                ? theme.colorScheme.inverseSurface
+                                : theme.colorScheme.outlineVariant),
+                        filled: true,
+                        fillColor: theme.colorScheme.onInverseSurface,
+                        prefixIcon: Icon(FontAwesomeIcons.userPen,
+                            size: 18,
+                            color: controller.formMode.value == 'create'
+                                ? theme.colorScheme.tertiary
+                                : theme.colorScheme.outlineVariant),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                                color: theme.colorScheme.error, width: 0.4)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                                color: theme.colorScheme.tertiaryContainer,
+                                width: 0.4)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                                color: theme.colorScheme.tertiaryContainer,
+                                width: 0.4)),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                                color: theme.colorScheme.error, width: 0.4)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(
+                                color: theme.colorScheme.tertiaryContainer,
+                                width: 0.4))),
+                  ))),
           Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: TextFormField(
