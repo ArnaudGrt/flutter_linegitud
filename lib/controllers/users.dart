@@ -6,6 +6,7 @@ import 'package:linegitud/models/db.dart';
 import 'package:linegitud/models/user.dart';
 import 'package:linegitud/utils/options.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:math';
 
 class UsersController extends GetxController {
   final DataBaseController dbController = Get.find();
@@ -71,7 +72,7 @@ class UsersController extends GetxController {
 
       String avatarUrl = userAvatar.value;
       if(!userAvatar.value.startsWith("http")){
-        avatarUrl = "https://www.logitud.fr/wp-inside/themes/logitud.fr/assets/images/icons/favicon.png";
+        avatarUrl = "https://picsum.photos/200/200?random=${Random().nextInt(999)}";
       }
 
       int res = await dbController.database.rawInsert(
