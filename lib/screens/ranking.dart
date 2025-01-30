@@ -212,17 +212,23 @@ class UserRanking extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Transform.scale(
-                    scale: 0.75,
-                    child: podiumElement(
-                        2, Colors.grey[400], ranking[1].avatar, theme),
-                  ),
-                  podiumElement(
-                      1, Colors.yellow[700], ranking[0].avatar, theme),
-                  Transform.scale(
-                      scale: 0.65,
-                      child: podiumElement(
-                          3, Colors.brown[700], ranking[2].avatar, theme))
+                  ranking.length >= 2
+                      ? Transform.scale(
+                          scale: 0.75,
+                          child: podiumElement(
+                              2, Colors.grey[400], ranking[1].avatar, theme),
+                        )
+                      : const SizedBox.shrink(),
+                  ranking.isNotEmpty
+                      ? podiumElement(
+                          1, Colors.yellow[700], ranking[0].avatar, theme)
+                      : const SizedBox.shrink(),
+                  ranking.length >= 3
+                      ? Transform.scale(
+                          scale: 0.65,
+                          child: podiumElement(
+                              3, Colors.brown[700], ranking[2].avatar, theme))
+                      : const SizedBox.shrink()
                 ])));
   }
 
