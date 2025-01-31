@@ -561,6 +561,7 @@ class Users extends StatelessWidget {
                           ? FontAwesomeIcons.circleCheck
                           : FontAwesomeIcons.triangleExclamation,
                       size: 16,
+                      color: theme.colorScheme.surfaceContainerLowest,
                     )),
                     const WidgetSpan(
                         child: SizedBox(
@@ -568,7 +569,8 @@ class Users extends StatelessWidget {
                     )),
                     TextSpan(
                         text: text,
-                        style: TextStyle(color: theme.colorScheme.onSurface))
+                        style: TextStyle(
+                            color: theme.colorScheme.surfaceContainerLowest))
                   ]))))),
     ]);
   }
