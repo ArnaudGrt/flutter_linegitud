@@ -196,8 +196,12 @@ class Users extends StatelessWidget {
                             onPressed: () {
                               controller.formMode.value = "update";
                               controller.formMode.refresh();
-                              controller.userName.value = controller.searchResultUser.value.name;
-                              controller.userAvatar.value = controller.searchResultUser.value.avatar;
+                              controller.nameController.text =
+                                  controller.searchResultUser.value.name;
+                              controller.userName.value =
+                                  controller.searchResultUser.value.name;
+                              controller.avatarController.text =
+                                  controller.searchResultUser.value.avatar;
                             },
                             label: Text(
                               "Modifier",
@@ -264,6 +268,7 @@ class Users extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: Obx(() => TextFormField(
+                    controller: controller.nameController,
                     readOnly: controller.formMode.value == "update",
                     maxLength: 20,
                     onTapOutside: (event) {
@@ -279,7 +284,10 @@ class Users extends StatelessWidget {
 
                       return null;
                     },
-                    style: TextStyle(color: theme.colorScheme.onSurface),
+                    style: TextStyle(
+                        color: controller.formMode.value == 'create'
+                            ? theme.colorScheme.onSurface
+                            : theme.colorScheme.outlineVariant),
                     cursorColor: theme.colorScheme.tertiaryContainer,
                     decoration: InputDecoration(
                         hintText: "Prénom",
@@ -321,6 +329,7 @@ class Users extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: TextFormField(
+                controller: controller.avatarController,
                 onTapOutside: (event) {
                   return FocusScope.of(context).unfocus();
                 },
@@ -379,6 +388,19 @@ class Users extends StatelessWidget {
                     : resultDisplay(theme, false,
                         value.error ?? "L'utilisateur n'a pas pu être créé...");
               })),
+          Obx(() => controller.updateUserResult.value.match(
+              onNone: () => const SizedBox.shrink(),
+              onLoading: () => const SizedBox.shrink(),
+              onSome: (value) {
+                return value.success
+                    ? resultDisplay(theme, true,
+                        "L'utilisateur a été mis à jour avec succès !")
+                    : resultDisplay(
+                        theme,
+                        false,
+                        value.error ??
+                            "L'utilisateur n'a pas pu être mis à jour...");
+              })),
         ],
       ),
     );
@@ -397,13 +419,21 @@ class Users extends StatelessWidget {
                     backgroundColor: WidgetStatePropertyAll<Color>(
                         theme.colorScheme.onInverseSurface)),
                 onPressed: () {
+                  if (controller.formMode.value == 'update') {
+                    return;
+                  }
+
                   controller.userFormKey.currentState!.reset();
                   controller.newUserResult.value = Options<DbResult>();
+                  controller.reset();
                 },
-                label: Text(
-                  "Réinitialiser",
-                  style: TextStyle(color: theme.colorScheme.onSurface),
-                ))),
+                label: Obx(() => Text(
+                      "Réinitialiser",
+                      style: TextStyle(
+                          color: controller.formMode.value == 'create'
+                              ? theme.colorScheme.onSurface
+                              : theme.colorScheme.outlineVariant),
+                    )))),
         Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 8),
             child: FilledButton.icon(
@@ -414,6 +444,18 @@ class Users extends StatelessWidget {
                       theme.colorScheme.tertiary)),
               onPressed: () async {
                 if (controller.userFormKey.currentState!.validate()) {
+                  if (controller.formMode.value == 'update') {
+                    final result = await controller.updateUser();
+                    controller.updateUserResult.value.setSome(result);
+                    controller.updateUserResult.refresh();
+
+                    if (result.success) {
+                      controller.reset();
+                    }
+
+                    return;
+                  }
+
                   final result = await controller.createUser();
                   controller.newUserResult.value.setSome(result);
                   controller.newUserResult.refresh();

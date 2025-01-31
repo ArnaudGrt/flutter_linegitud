@@ -24,9 +24,12 @@ class UsersController extends GetxController {
   // User Form
   final userFormKey = GlobalKey<FormState>();
   final userName = "".obs;
+  TextEditingController nameController = TextEditingController();
   final userAvatar = "".obs;
-  
+  TextEditingController avatarController = TextEditingController();
+
   Rx<Options<DbResult>> newUserResult = Rx(Options<DbResult>());
+  Rx<Options<DbResult>> updateUserResult = Rx(Options<DbResult>());
 
   Future searchUser() async {
     final formattedUserValue = userSearchValue.value.capitalizeFirst;
@@ -65,17 +68,13 @@ class UsersController extends GetxController {
     final formattedUserName = userName.value.capitalizeFirst ?? "";
     if(formattedUserName == "") return DbResult(success: false, error: "Le nom de l'utilisateur ne peut pas être vide...");
 
-    DbResult userAlreadyExist = await checkUser(formattedUserName);
+    DbResult userAlreadyExist = await checkUser(formattedUserName, false);
 
     if(userAlreadyExist.success){
       final currentIndexQuery = await fetchCurrentIndex();
       int currentIndex = Sqflite.firstIntValue(currentIndexQuery) ?? 0;
       int nextId = currentIndex + 1;
-
-      String avatarUrl = userAvatar.value;
-      if(!userAvatar.value.startsWith("http")){
-        avatarUrl = "https://picsum.photos/200/200?random=${Random().nextInt(999)}";
-      }
+      String avatarUrl = setAvatar();
 
       int res = await dbController.database.rawInsert(
         '''
@@ -95,15 +94,40 @@ class UsersController extends GetxController {
     return DbResult(success: false, error: "L'utilisateur $formattedUserName existe déjà");
   }
 
-  Future<DbResult> checkUser(String value) async {
+  Future updateUser() async {
+    String name = userName.value;
+    DbResult userExists = await checkUser(name, true);
+
+    if(userExists.success){
+      String avatarUrl = setAvatar();
+
+      int res = await dbController.database.rawUpdate(
+        '''
+          UPDATE users SET avatar = ? WHERE name = ?
+        ''',
+        [avatarUrl, name]);
+      
+      if(res == 1){
+        return DbResultId(success: true, id: res);
+      }
+
+      return DbResult(success: false, error: "Tout ne s'est pas passé correctement... Il y eu un problème lors de la mise à jour de l'utilisateur $name...");
+    }
+
+    return DbResult(success: false, error: "L'utilisateur $name n'existe pas ou n'a pas été trouvé...");
+  }
+
+  Future<DbResult> checkUser(String value, bool inverse) async {
+    bool resultBool = !inverse ? true : false;
+
     final checkQuery = await dbController.database.rawQuery(
       "SELECT id FROM users WHERE name = ? LIMIT 1", [value]);
 
     if(checkQuery.length == 0){
-      return DbResult(success: true);
+      return DbResult(success: resultBool);
     }
 
-    return DbResult(success: false);
+    return DbResult(success: !resultBool);
   }
 
   Future fetchCurrentIndex() async {
@@ -111,5 +135,24 @@ class UsersController extends GetxController {
       "SELECT MAX(id) FROM users");
 
     return userCount;
+  }
+
+  String setAvatar(){
+    if(!userAvatar.value.startsWith("http")){
+      return "https://picsum.photos/200/200?random=${Random().nextInt(999)}";
+    }
+
+    return userAvatar.value;
+  }
+
+  void reset(){
+    searchFormKey.currentState!.reset();
+    searchResultValue.value = Options<bool>();
+    searchResultUser.value = CleanUser(name: "", avatar: "");
+
+    userFormKey.currentState!.reset();
+    formMode.value = "create";
+    nameController.text = "";
+    avatarController.text = "";
   }
 }
