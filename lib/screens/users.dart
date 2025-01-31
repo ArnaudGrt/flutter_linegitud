@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:linegitud/controllers/history.dart';
 import 'package:linegitud/controllers/users.dart';
 import 'package:linegitud/models/db.dart';
 import 'package:linegitud/models/user.dart';
@@ -10,6 +11,7 @@ class Users extends StatelessWidget {
   Users({super.key});
 
   final UsersController controller = Get.find();
+  final HistoryController historyController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -511,11 +513,11 @@ class Users extends StatelessWidget {
               controller.deleteUserResult.refresh();
 
               if (result.success) {
-                controller.searchResultValue.value = Options<bool>();
+                controller.reset();
+                historyController.initLinesHistory();
               }
 
               Get.back();
-              // TODO : when delete user with a line, History screen is not reload
             },
             child: Text(
               'Oui',
